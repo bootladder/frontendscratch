@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
   <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -16,6 +15,13 @@
     <!-- Custom styles for this template -->
     <link href="css/heroic-features.css" rel="stylesheet">
 
+    <!-- AngularJS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
+
+
+
+    <script src="app/issuewidget.js"></script>
   </head>
 
   <body>
@@ -61,9 +67,17 @@
       <!-- Page Features -->
       <div class="row text-center">
 
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-3 col-md-6 mb-4" ng-app="myapp" ng-controller="IssueWidgetController as iw">
           <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
+						<div>
+							<h1>{{iw.d1}} Is!</h1>
+							<a href="" ng-click="iw.doSomething()">Click!</a>
+							<a href="" ng-click="iw.getSomething()">Click to Get!</a>
+							<h1>{{globalscope}} Is!</h1>
+						</div>
+            <label>Name:</label>
+						<input type="text" ng-model="myname" placeholder="Enter a name">
+						<hr><h1>Hello {{myname}} ! </h1>
             <div class="card-body">
               <h4 class="card-title">Card title</h4>
               <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
@@ -74,17 +88,10 @@
           </div>
         </div>
 
+      <!-- SECOND WIDGET -->
         <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/500x325" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo magni sapiente, tempore debitis beatae culpa natus architecto.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
+				<a href="#">Load View</a>
+				<ng-view></ng-view>
         </div>
 
         <div class="col-lg-3 col-md-6 mb-4">

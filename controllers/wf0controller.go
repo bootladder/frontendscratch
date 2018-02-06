@@ -11,6 +11,6 @@ type WF0Controller struct {
 func (c *WF0Controller) CreatePage() {
 	c.Data["Website"] = "beego.me"
 	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "wf0.tpl"
+	c.TplName = "wf0.html"
 	c.Render()
 }
