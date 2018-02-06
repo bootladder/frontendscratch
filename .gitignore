@@ -1,2 +1,4 @@
 *.swp
 hellobeego
+*.crt
+*.key
