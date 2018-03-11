@@ -5,6 +5,7 @@
   <title>Beego</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta http-equiv="Cache-control" content="no-cache"/>
 
   <style type="text/css">
     *,body {
