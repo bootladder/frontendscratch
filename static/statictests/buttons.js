@@ -4,6 +4,8 @@ $("#divTest1").text("Hello, world!");
 
 var btnStartRecording = document.getElementById('btn-start-recording');
 var btnStopRecording = document.getElementById('btn-stop-recording');
+var btnProcessRecording = document.getElementById('btn-process-recording');
+
 var audio = document.querySelector('audio');
 
 btnStartRecording.onclick = function() {
@@ -41,3 +43,24 @@ function stopRecordingCallback() {
     recorder.microphone.stop();
 }
 
+btnProcessRecording.onclick = function() {
+ // get recorded blob
+		var blob = recorder.getBlob();
+
+		// generating a random file name
+		var fileName = "my filename";
+
+		// we need to upload "File" --- not "Blob"
+		var fileObject = new File([blob], fileName, {
+				type: 'video/webm'
+		});
+
+		var formData = new FormData();
+
+		// recorded data
+		formData.append('video-blob', fileObject);
+
+		// file name
+		formData.append('video-filename', fileObject.name);
+
+}
