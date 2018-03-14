@@ -8,4 +8,5 @@ function dynamicallyLoadScript(url) {
 }
 dynamicallyLoadScript("https://cdn.webrtc-experiment.com/RecordRTC.js");
 dynamicallyLoadScript("https://webrtc.github.io/adapter/adapter-latest.js");
+dynamicallyLoadScript("webrtc-helpers.js");
 dynamicallyLoadScript("buttons.js");
