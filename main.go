@@ -18,6 +18,7 @@ func main() {
 	beego.SetStaticPath("/app", "static/app")
 	beego.SetStaticPath("/reactsite", "static/reactsite")
 	beego.SetStaticPath("/static", "static/reactsite/static")
+	beego.SetStaticPath("/statictests", "static/statictests")
 	beego.SetStaticPath("/", "static/reactsite")
 
 	beego.BConfig.Listen.EnableHTTP = true
