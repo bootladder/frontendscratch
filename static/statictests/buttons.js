@@ -44,7 +44,7 @@ function stopRecordingCallback() {
 }
 
 btnProcessRecording.onclick = function() {
- // get recorded blob
+		// get recorded blob
 		var blob = recorder.getBlob();
 
 		// generating a random file name
@@ -52,7 +52,7 @@ btnProcessRecording.onclick = function() {
 
 		// we need to upload "File" --- not "Blob"
 		var fileObject = new File([blob], fileName, {
-				type: 'video/webm'
+				type: 'audio/wav'
 		});
 
 		var formData = new FormData();
@@ -63,4 +63,41 @@ btnProcessRecording.onclick = function() {
 		// file name
 		formData.append('video-filename', fileObject.name);
 
+console.log("Uploading...");
+		// upload using jQuery
+		$.ajax({
+				url: 'https://orbhub.bootladder.com.com:8089/audiomessageupload', 
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false,
+				type: 'POST',
+				success: function(response) {
+						if (response === 'success') {
+								alert('successfully uploaded recorded blob');
+
+								// file path on server
+								var fileDownloadURL = 'https://webrtcweb.com/RecordRTC/uploads/' + fileObject.name;
+
+								// preview the uploaded file URL
+								document.getElementById('header').innerHTML = '<a href="' + fileDownloadURL + '" target="_blank">' + fileDownloadURL + '</a>';
+
+								// preview uploaded file in a VIDEO element
+								document.getElementById('your-video-id').src = fileDownloadURL;
+
+								// open uploaded file in a new tab
+								window.open(fileDownloadURL);
+						} else {
+								alert(response); // error/failure
+						}
+				}
+				,
+				error: function(xhr, status, error) {
+					
+  console.log(xhr.responseText);
+  console.log(xhr);
+  console.log(status);
+  console.log(error);
+				}
+		});
 }
