@@ -5,6 +5,7 @@ $("#divTest1").text("Hello, world!");
 var btnStartRecording = document.getElementById('btn-start-recording');
 var btnStopRecording = document.getElementById('btn-stop-recording');
 var btnProcessRecording = document.getElementById('btn-process-recording');
+var btnLoadRecordings = document.getElementById('btn-load-recordings');
 
 var audio = document.querySelector('audio');
 
@@ -96,3 +97,13 @@ btnProcessRecording.onclick = function() {
      }); 
 ;
 }
+
+
+btnLoadRecordings.onclick = function() {
+    console.log("loading3")
+    var audio = document.querySelector('audio') || new Audio();
+    audio.src="https://orbhub.bootladder.com:9002/audiomessagedownload/latest";
+    audio.load()
+}
+
+
