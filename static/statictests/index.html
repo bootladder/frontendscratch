@@ -3,12 +3,15 @@ test
 <button id="btn-start-recording">Start Recording</button>
 <button id="btn-stop-recording" disabled>Stop Recording</button>
 <button id="btn-process-recording">Process Recording</button>
+<button id="btn-load-recordings">Load Recordings</button>
 <hr>
 <div id="divTest1"></div>
 <hr>
 <audio controls autoplay></audio>
-<audio src="https://orbhub.bootladder.com:9002/audiomessagedownload/latest" controls ></audio>
+<audio controls ></audio>
 
+<hr>
+my guess is the latest/ url is being cached, so new audio is not download every time.  makes sense, but how to force the download, perhaps with a button press in javascript? 4
 
 <script src="app.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
