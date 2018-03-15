@@ -44,11 +44,10 @@ function stopRecordingCallback() {
 }
 
 btnProcessRecording.onclick = function() {
-		// get recorded blob
+		
 		var blob = recorder.getBlob();
 
-		// generating a random file name
-		var fileName = "my filename";
+		var fileName = "audiomessage_"+new Date().valueOf();
 
 		// we need to upload "File" --- not "Blob"
 		var fileObject = new File([blob], fileName, {
@@ -58,46 +57,42 @@ btnProcessRecording.onclick = function() {
 		var formData = new FormData();
 
 		// recorded data
-		formData.append('video-blob', fileObject);
+		formData.append('file', fileObject);
 
 		// file name
-		formData.append('video-filename', fileObject.name);
+		formData.append('filename', fileObject.name);
 
-console.log("Uploading...");
-		// upload using jQuery
+		console.log("Uploading...");
 		$.ajax({
-				url: 'https://orbhub.bootladder.com.com:8089/audiomessageupload', 
+				url: 'https://orbhub.bootladder.com:9002/audiomessageupload', 
 				data: formData,
 				cache: false,
 				contentType: false,
 				processData: false,
 				type: 'POST',
 				success: function(response) {
-						if (response === 'success') {
-								alert('successfully uploaded recorded blob');
+						var msg = 'successfully uploaded recorded blob. heres message: ' + response;
+						alert(msg);
 
-								// file path on server
-								var fileDownloadURL = 'https://webrtcweb.com/RecordRTC/uploads/' + fileObject.name;
+						//var fileDownloadURL = 'https://google.com'
 
-								// preview the uploaded file URL
-								document.getElementById('header').innerHTML = '<a href="' + fileDownloadURL + '" target="_blank">' + fileDownloadURL + '</a>';
+						//// preview the uploaded file URL
+						//document.getElementById('header').innerHTML = '<a href="' + fileDownloadURL + '" target="_blank">' + fileDownloadURL + '</a>';
 
-								// preview uploaded file in a VIDEO element
-								document.getElementById('your-video-id').src = fileDownloadURL;
+						//// preview uploaded file in a VIDEO element
+						//document.getElementById('your-video-id').src = fileDownloadURL;
 
-								// open uploaded file in a new tab
-								window.open(fileDownloadURL);
-						} else {
-								alert(response); // error/failure
-						}
-				}
-				,
+						//// open uploaded file in a new tab
+						//window.open(fileDownloadURL);
+				},
 				error: function(xhr, status, error) {
-					
-  console.log(xhr.responseText);
-  console.log(xhr);
-  console.log(status);
-  console.log(error);
+						console.log(xhr.responseText);
+						console.log(xhr);
+						console.log(status);
+						console.log(error);
 				}
-		});
+		}).fail(function( jqXHR, textStatus ) {  
+    alert( "Triggered fail callback: " + textStatus );  
+     }); 
+;
 }
