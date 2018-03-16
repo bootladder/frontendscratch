@@ -1,61 +1,28 @@
 //Uses jQuery
 console.log("hello");
 
-var btnStartRecording = document.getElementById('btn-start-recording');
-var btnStopRecording = document.getElementById('btn-stop-recording');
 var btnProcessRecording = document.getElementById('btn-process-recording');
 var btnLoadRecordings = document.getElementById('btn-load-recordings');
+var btnLoadMessageDesc = document.getElementById('btn-load-messagedesc');
 
 var audio = document.querySelector('audio');
 var audioPlayback = document.getElementById('audio-playback');
 var divRecordingsList = document.getElementById('div-recordings-list');
+var divMessageDescList = document.getElementById('div-messagedesc-list');
 
-btnStartRecording.onclick = function() {
-    this.disabled = true;
-    captureMicrophone(function(microphone) {
-				console.log("getUserMedia OK, callback();");
-        setSrcObject(microphone, audio);
-        //audio.play(); //has no effect?
-
-        recorder = RecordRTC(microphone, {
-            type: 'audio',
-            recorderType: StereoAudioRecorder,
-            desiredSampRate: 16000
-        });
-
-        recorder.startRecording();
-
-        // release microphone on stopRecording
-        recorder.microphone = microphone;
-
-        btnStopRecording.disabled = false;
-    });
-};
-
-btnStopRecording.onclick = function() {
-    this.disabled = true;
-    recorder.stopRecording(stopRecordingCallback);
-};
-
-function stopRecordingCallback() {
-    var blob = recorder.getBlob();
-    audio.src = URL.createObjectURL(blob);
-    audio.play();
-
-    recorder.microphone.stop();
-}
 
 btnProcessRecording.onclick = function() {
 		
     // Convert recorded blob to File with name
 		var blob = recorder.getBlob();
-		var fileName = "audiomessage_"+new Date().valueOf();
+		var timestamp = new Date().valueOf();
+		var fileName = "audiomessage_"+timestamp
 		var fileObject = new File([blob], fileName, {
 				type: 'audio/wav'
 		});
 
     // Create JSON messagedesc from DOM
-    var messagedesc  = create_messagedesc()
+    var messagedesc  = create_messagedesc(fileName,timestamp)
 
     // Create Form with recorded blob and JSON messagedesc
 		var formData = new FormData();
@@ -87,7 +54,7 @@ btnProcessRecording.onclick = function() {
 ;
 }
 
-function create_messagedesc() {
+function create_messagedesc(fileName,timestamp) {
     var inputSenderVal = 
             document.querySelector('input[name=sender]:checked').value
     var inputDestinationVal = 
@@ -99,6 +66,8 @@ function create_messagedesc() {
     blah.sender = inputSenderVal
     blah.destination = inputDestinationVal
     blah.topic = inputTopicVal
+    blah.timestamp = timestamp
+    blah.audioblobid = fileName
     console.log(JSON.stringify(blah))
     return  JSON.stringify(blah)
 }
@@ -182,4 +151,41 @@ function deleteRecordedMessage() {
             alert( s )
         }
     });
+}
+
+
+btnLoadMessageDesc.onclick = function() {
+    console.log("loading message descs")
+
+    fetchMessageDescList( refreshMessageDesc ) //is a callback
+}
+
+function fetchMessageDescList( callback ) {
+    $.ajax({
+        dataType: "json",
+        url: "https://orbhub.bootladder.com:9002/audiomessageapi/list_messagedesc",
+        success: function(myjson) { 
+            callback( myjson )
+        }
+    });
+}
+
+function refreshMessageDesc( jsonRecordingsList ) {
+console.log(jsonRecordingsList)
+    divMessageDescList.innerHTML = ""
+    ul = createMessagedescList(jsonRecordingsList)
+    divMessageDescList.appendChild(ul)
+}
+
+function createMessagedescList(jsonlist) {
+console.log(jsonlist)
+    var ul = document.createElement('ul');
+    $.each(jsonlist, function(i, field){
+console.log(field)
+console.log("field is: " +JSON.stringify(field))
+        var li = document.createElement('li');
+        li.innerHTML = JSON.stringify(field)
+        ul.appendChild(li)
+    });
+    return ul
 }
