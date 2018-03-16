@@ -47,18 +47,21 @@ function stopRecordingCallback() {
 
 btnProcessRecording.onclick = function() {
 		
+    // Convert recorded blob to File with name
 		var blob = recorder.getBlob();
-
 		var fileName = "audiomessage_"+new Date().valueOf();
-
-		// we need to upload "File" --- not "Blob"
 		var fileObject = new File([blob], fileName, {
 				type: 'audio/wav'
 		});
 
+    // Create JSON messagedesc from DOM
+    var messagedesc  = create_messagedesc()
+
+    // Create Form with recorded blob and JSON messagedesc
 		var formData = new FormData();
-		formData.append('file', fileObject);
 		formData.append('filename', fileObject.name);
+		formData.append('messagedesc', messagedesc);
+		formData.append('file', fileObject);
 
 		console.log("Uploading...");
 		$.ajax({
@@ -82,6 +85,13 @@ btnProcessRecording.onclick = function() {
         alert( "Triggered fail callback: " + textStatus );  
      }); 
 ;
+}
+
+function create_messagedesc() {
+    var blah = {"a":1,"b":2}
+    blah.blah2 = 2 
+    console.log(JSON.stringify(blah))
+    return  JSON.stringify(blah)
 }
 
 
