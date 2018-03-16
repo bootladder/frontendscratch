@@ -8,6 +8,7 @@ var btnProcessRecording = document.getElementById('btn-process-recording');
 var btnLoadRecordings = document.getElementById('btn-load-recordings');
 
 var audio = document.querySelector('audio');
+var divRecordingsList = document.getElementById('div-recordings-list');
 
 btnStartRecording.onclick = function() {
     this.disabled = true;
@@ -56,11 +57,7 @@ btnProcessRecording.onclick = function() {
 		});
 
 		var formData = new FormData();
-
-		// recorded data
 		formData.append('file', fileObject);
-
-		// file name
 		formData.append('filename', fileObject.name);
 
 		console.log("Uploading...");
@@ -74,17 +71,6 @@ btnProcessRecording.onclick = function() {
 				success: function(response) {
 						var msg = 'successfully uploaded recorded blob. heres message: ' + response;
 						alert(msg);
-
-						//var fileDownloadURL = 'https://google.com'
-
-						//// preview the uploaded file URL
-						//document.getElementById('header').innerHTML = '<a href="' + fileDownloadURL + '" target="_blank">' + fileDownloadURL + '</a>';
-
-						//// preview uploaded file in a VIDEO element
-						//document.getElementById('your-video-id').src = fileDownloadURL;
-
-						//// open uploaded file in a new tab
-						//window.open(fileDownloadURL);
 				},
 				error: function(xhr, status, error) {
 						console.log(xhr.responseText);
@@ -93,7 +79,7 @@ btnProcessRecording.onclick = function() {
 						console.log(error);
 				}
 		}).fail(function( jqXHR, textStatus ) {  
-    alert( "Triggered fail callback: " + textStatus );  
+        alert( "Triggered fail callback: " + textStatus );  
      }); 
 ;
 }
@@ -104,6 +90,41 @@ btnLoadRecordings.onclick = function() {
     var audio = document.querySelector('audio') || new Audio();
     audio.src="https://orbhub.bootladder.com:9002/audiomessagedownload/latest";
     audio.load()
+
+    fetchRecordingsList( refreshRecordingsList ) //is a callback
 }
 
+function fetchRecordingsList( callback ) {
+    $.ajax({
+        dataType: "json",
+        url: "https://orbhub.bootladder.com:9002/audiomessageapi/list",
+        success: function(myjson) { 
+            callback( myjson )
+        }
+    });
+}
 
+function refreshRecordingsList( jsonRecordingsList ) {
+    divRecordingsList.innerHTML = ""
+    ul = createRecordingsList(jsonRecordingsList)
+    divRecordingsList.appendChild(ul)
+}
+
+function createRecordingsList(jsonlist) {
+    var ul = document.createElement('ul');
+    $.each(jsonlist, function(i, field){
+        var li = document.createElement('li');
+        var a  = document.createElement('a');
+        a.href="#"
+        a.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
+                  + field;
+        a.innerHTML = field;
+        a.onclick=hello;
+        li.appendChild(a)
+        ul.appendChild(li)
+    });
+    return ul
+}
+    
+
+function hello() {alert(this.id)}
