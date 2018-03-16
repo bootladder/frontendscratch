@@ -4,11 +4,15 @@ console.log("hello");
 var btnProcessRecording = document.getElementById('btn-process-recording');
 var btnLoadRecordings = document.getElementById('btn-load-recordings');
 var btnLoadMessageDesc = document.getElementById('btn-load-messagedesc');
+var btnLoadMessageDescAliceBob = 
+                document.getElementById('btn-load-messagedesc-alice-bob');
 
 var audio = document.querySelector('audio');
 var audioPlayback = document.getElementById('audio-playback');
 var divRecordingsList = document.getElementById('div-recordings-list');
 var divMessageDescList = document.getElementById('div-messagedesc-list');
+var divMessageDescListAliceBob = 
+                document.getElementById('div-messagedesc-list-alice-bob');
 
 
 btnProcessRecording.onclick = function() {
@@ -171,7 +175,7 @@ function fetchMessageDescList( callback ) {
 }
 
 function refreshMessageDesc( jsonRecordingsList ) {
-console.log(jsonRecordingsList)
+    console.log(jsonRecordingsList)
     divMessageDescList.innerHTML = ""
     ul = createMessagedescList(jsonRecordingsList)
     divMessageDescList.appendChild(ul)
@@ -181,11 +185,49 @@ function createMessagedescList(jsonlist) {
 console.log(jsonlist)
     var ul = document.createElement('ul');
     $.each(jsonlist, function(i, field){
-console.log(field)
-console.log("field is: " +JSON.stringify(field))
+        console.log(field)
+        console.log("field is: " +JSON.stringify(field))
         var li = document.createElement('li');
         li.innerHTML = JSON.stringify(field)
         ul.appendChild(li)
+    });
+    return ul
+}
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+btnLoadMessageDescAliceBob.onclick = function() {
+    console.log("loading Alice Bob message descs")
+
+    fetchMessageDescList( refreshMessageDescAliceBob ) //is a callback
+}
+
+function refreshMessageDescAliceBob( jsonRecordingsList ) {
+    console.log(jsonRecordingsList)
+    divMessageDescListAliceBob.innerHTML = ""
+    ul = createMessagedescListAliceBob(jsonRecordingsList)
+    divMessageDescListAliceBob.appendChild(ul)
+}
+
+function createMessagedescListAliceBob(jsonlist) {
+console.log(jsonlist)
+    var ul = document.createElement('ul');
+    $.each(jsonlist, function(i, field){
+        console.log(field)
+        console.log("field is: " +JSON.stringify(field))
+
+        if( field.sender == "alice" && field.destination == "bob") {
+          console.log("ALICE TO BOB!!!")
+          var li = document.createElement('li');
+          li.innerHTML = JSON.stringify(field)
+          ul.appendChild(li)
+        }
+        if( field.sender == "bob" && field.destination == "alice") {
+          console.log("BOB to ALICE!!!")
+          var li = document.createElement('li');
+          li.innerHTML = JSON.stringify(field)
+          ul.appendChild(li)
+        }
     });
     return ul
 }
