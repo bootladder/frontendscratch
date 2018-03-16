@@ -143,8 +143,7 @@ function createRecordingsList(jsonlist) {
         var deleteButton = document.createElement('button')
         deleteButton.innerHTML = "delete"
         deleteButton.onclick = deleteRecordedMessage
-        deleteButton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
-                  + field;
+        deleteButton.id = field;
         li.appendChild(a)
         li.appendChild(deleteButton)
 
@@ -162,11 +161,25 @@ function playbackRecordedMessage() {
 }
 
 function deleteRecordedMessage() {
+
+    // Create Form with JSON filename
+		var formData = new FormData();
+    var s = {}
+    s.filename = this.id
+		//formData.append('filename', JSON.stringify(s));
+		formData.append('filename', this.id)
+    console.log(s)
+
     $.ajax({
         //dataType: "json",
+				type: 'POST',
+				data: formData,
+				processData: false,  //stupid necessary thing
+				contentType: false,  //also necessary
         url: "https://orbhub.bootladder.com:9002/audiomessageapi/delete",
         success: function(myjson) { 
-            alert( myjson )
+            s = "Deleted Message." + myjson
+            alert( s )
         }
     });
 }
