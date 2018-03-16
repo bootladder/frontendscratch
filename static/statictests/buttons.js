@@ -88,8 +88,17 @@ btnProcessRecording.onclick = function() {
 }
 
 function create_messagedesc() {
-    var blah = {"a":1,"b":2}
-    blah.blah2 = 2 
+    var inputSenderVal = 
+            document.querySelector('input[name=sender]:checked').value
+    var inputDestinationVal = 
+            document.querySelector('input[name=destination]:checked').value
+    var inputTopicVal = 
+            document.querySelector('input[name=topic]:checked').value
+ 
+    var blah = {}
+    blah.sender = inputSenderVal
+    blah.destination = inputDestinationVal
+    blah.topic = inputTopicVal
     console.log(JSON.stringify(blah))
     return  JSON.stringify(blah)
 }
