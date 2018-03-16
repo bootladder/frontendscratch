@@ -1,6 +1,5 @@
 //Uses jQuery
 console.log("hello");
-$("#divTest1").text("Hello, world!");
 
 var btnStartRecording = document.getElementById('btn-start-recording');
 var btnStopRecording = document.getElementById('btn-stop-recording');
@@ -8,6 +7,7 @@ var btnProcessRecording = document.getElementById('btn-process-recording');
 var btnLoadRecordings = document.getElementById('btn-load-recordings');
 
 var audio = document.querySelector('audio');
+var audioPlayback = document.getElementById('audio-playback');
 var divRecordingsList = document.getElementById('div-recordings-list');
 
 btnStartRecording.onclick = function() {
@@ -87,7 +87,7 @@ btnProcessRecording.onclick = function() {
 
 btnLoadRecordings.onclick = function() {
     console.log("loading3")
-    var audio = document.querySelector('audio') || new Audio();
+    var audio = document.getElementById('audio-playback') || new Audio();
     audio.src="https://orbhub.bootladder.com:9002/audiomessagedownload/latest";
     audio.load()
 
@@ -115,12 +115,20 @@ function createRecordingsList(jsonlist) {
     $.each(jsonlist, function(i, field){
         var li = document.createElement('li');
         var a  = document.createElement('a');
-        a.href="#"
+        a.href="#audio-playback"
         a.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
                   + field;
         a.innerHTML = field;
         a.onclick=playbackRecordedMessage;
+
+        var deleteButton = document.createElement('button')
+        deleteButton.innerHTML = "delete"
+        deleteButton.onclick = deleteRecordedMessage
+        deleteButton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
+                  + field;
         li.appendChild(a)
+        li.appendChild(deleteButton)
+
         ul.appendChild(li)
     });
     return ul
@@ -129,7 +137,17 @@ function createRecordingsList(jsonlist) {
 
 function playbackRecordedMessage() {
     console.log("loading3")
-    var audio = document.querySelector('audio') || new Audio();
+    var audio = document.getElementById('audio-playback') || new Audio();
     audio.src= this.id;
     audio.load()
+}
+
+function deleteRecordedMessage() {
+    $.ajax({
+        //dataType: "json",
+        url: "https://orbhub.bootladder.com:9002/audiomessageapi/delete",
+        success: function(myjson) { 
+            alert( myjson )
+        }
+    });
 }
