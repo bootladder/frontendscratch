@@ -126,12 +126,16 @@ function createRecordingsList(jsonlist) {
 }
     
 
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 function playbackRecordedMessage() {
     console.log("loading3")
     var audio = document.getElementById('audio-playback') || new Audio();
     audio.src= this.id;
     audio.load()
 }
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
 function deleteRecordedMessage() {
 
@@ -157,6 +161,8 @@ function deleteRecordedMessage() {
     });
 }
 
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
 btnLoadMessageDesc.onclick = function() {
     console.log("loading message descs")
@@ -219,15 +225,29 @@ console.log(jsonlist)
         if( field.sender == "alice" && field.destination == "bob") {
           console.log("ALICE TO BOB!!!")
           var li = document.createElement('li');
-          li.innerHTML = JSON.stringify(field)
+          a = createAnchorTagFromMessageDesc(field)
+          li.appendChild(a)
           ul.appendChild(li)
         }
         if( field.sender == "bob" && field.destination == "alice") {
           console.log("BOB to ALICE!!!")
           var li = document.createElement('li');
-          li.innerHTML = JSON.stringify(field)
+          a = createAnchorTagFromMessageDesc(field)
+          li.appendChild(a)
           ul.appendChild(li)
         }
     });
     return ul
+}
+
+function createAnchorTagFromMessageDesc(messagedesc) {
+        var a  = document.createElement('a');
+        a.href="#audio-playback"
+        a.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
+                  + messagedesc.audioblobid;
+        a.innerHTML = messagedesc.sender + "-" + messagedesc.destination +
+                      "-" + messagedesc.timestamp + 
+                      "-topic-" + messagedesc.topic
+        a.onclick=playbackRecordedMessage;
+        return a
 }
