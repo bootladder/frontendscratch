@@ -119,7 +119,7 @@ function createRecordingsList(jsonlist) {
         a.id="https://orbhub.bootladder.com:9002/audiomessagedownload/"
                   + field;
         a.innerHTML = field;
-        a.onclick=hello;
+        a.onclick=playbackRecordedMessage;
         li.appendChild(a)
         ul.appendChild(li)
     });
@@ -127,4 +127,9 @@ function createRecordingsList(jsonlist) {
 }
     
 
-function hello() {alert(this.id)}
+function playbackRecordedMessage() {
+    console.log("loading3")
+    var audio = document.querySelector('audio') || new Audio();
+    audio.src= this.id;
+    audio.load()
+}
