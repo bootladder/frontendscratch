@@ -1,25 +1,40 @@
-Audio Message Recording
+<h1>Audio Message Recording</h1>
+<div class="row">
+  <audio id="audio-recording" controls autoplay></audio>
+  <button id="btn-start-recording">Start Recording</button>
+  <button id="btn-stop-recording" disabled>Stop Recording</button>
+  <button id="btn-process-recording">Process (Upload) Recording</button>
+</div>
 <hr>
-<audio id="audio-recording" controls autoplay></audio>
-<button id="btn-start-recording">Start Recording</button>
-<button id="btn-stop-recording" disabled>Stop Recording</button>
-<button id="btn-process-recording">Process (Upload) Recording</button>
+<h1>Audio Message Metadata Select</h1>
+<div class="row">
+  <div class="col-sm-4">
+    <form id="form-message-metadata">
+      <h1>Sender</h1>
+      <input type="radio" name="sender" value="alice" checked> Alice<br>
+      <input type="radio" name="sender" value="bob"> Bob<br>
+      <input type="radio" name="sender" value="chris"> Chris
+    </form> 
+  </div>
+  <div class="col-sm-4">
+    <form id="form-message-metadata">
+      <h1>Destination</h1>
+      <input type="radio" name="sender" value="alice" checked> Alice<br>
+      <input type="radio" name="sender" value="bob"> Bob<br>
+      <input type="radio" name="sender" value="chris"> Chris
+    </form> 
+  </div>
+  <div class="col-sm-4">
+    <form id="form-message-metadata">
+      <h1>Topic</h1>
+      <input type="radio" name="topic" value="1" checked> Topic1?<br>
+      <input type="radio" name="topic" value="2"> Topic2?<br>
+      <input type="radio" name="topic" value="3"> Topic3?
+    </form> 
+  </div>
+</div> 
 <hr>
-Audio Message Metadata Select
-<form id="form-message-metadata">
-  <h1>Sender</h1>
-  <input type="radio" name="sender" value="alice" checked> Alice<br>
-  <input type="radio" name="sender" value="bob"> Bob<br>
-  <input type="radio" name="sender" value="chris"> Chris
-</form> 
-<form id="form-message-metadata">
-  <h1>Destination</h1>
-  <input type="radio" name="sender" value="alice" checked> Alice<br>
-  <input type="radio" name="sender" value="bob"> Bob<br>
-  <input type="radio" name="sender" value="chris"> Chris
-</form> 
-<hr>
-Audio Message Playback
+<h1>Audio Message Playback</h1>
 <hr>
 <button id="btn-load-recordings">Load Recordings</button>
 
@@ -45,3 +60,5 @@ my guess is the latest/ url is being cached, so new audio is not download every 
 
 <script src="app.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
