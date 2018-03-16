@@ -218,6 +218,9 @@ function refreshMessageDescAliceBob( jsonRecordingsList ) {
 function createMessagedescListAliceBob(jsonlist) {
 console.log(jsonlist)
     var ul = document.createElement('ul');
+    var alice2bob = []
+    var bob2alice = []
+
     $.each(jsonlist, function(i, field){
         console.log(field)
         console.log("field is: " +JSON.stringify(field))
@@ -227,15 +230,22 @@ console.log(jsonlist)
           var li = document.createElement('li');
           a = createAnchorTagFromMessageDesc(field)
           li.appendChild(a)
-          ul.appendChild(li)
+          alice2bob.push(li)
         }
         if( field.sender == "bob" && field.destination == "alice") {
           console.log("BOB to ALICE!!!")
           var li = document.createElement('li');
           a = createAnchorTagFromMessageDesc(field)
           li.appendChild(a)
-          ul.appendChild(li)
+          bob2alice.push(li)
         }
+    });
+    
+    $.each(alice2bob, function(i,field) {
+        ul.appendChild(field)
+    });
+    $.each(bob2alice, function(i,field) {
+        ul.appendChild(field)
     });
     return ul
 }
