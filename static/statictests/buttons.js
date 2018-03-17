@@ -89,6 +89,7 @@ btnLoadRecordings.onclick = function() {
 function fetchRecordingsList( callback ) {
     $.ajax({
         dataType: "json",
+				cache: false,
         url: "https://orbhub.bootladder.com:9002/audiomessageapi/list",
         success: function(myjson) { 
             callback( myjson )
@@ -150,6 +151,7 @@ function deleteRecordedMessage() {
     $.ajax({
         //dataType: "json",
 				type: 'POST',
+				cache: false,
 				data: formData,
 				processData: false,  //stupid necessary thing
 				contentType: false,  //also necessary
@@ -174,6 +176,7 @@ function fetchMessageDescList( callback ) {
     $.ajax({
         dataType: "json",
         url: "https://orbhub.bootladder.com:9002/audiomessageapi/list_messagedesc",
+				cache: false,
         success: function(myjson) { 
             callback( myjson )
         }
