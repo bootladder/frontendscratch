@@ -231,15 +231,16 @@ console.log(jsonlist)
         if( field.sender == "alice" && field.destination == "bob") {
           console.log("ALICE TO BOB!!!")
           var li = document.createElement('li');
-          a = createAnchorTagFromMessageDesc(field)
-          li.appendChild(a)
+          //a = createAnchorTagFromMessageDesc(field)
+          entry = createListEntryFromMessageDesc(field)
+          li.appendChild(entry)
           alice2bob.push(li)
         }
         if( field.sender == "bob" && field.destination == "alice") {
           console.log("BOB to ALICE!!!")
           var li = document.createElement('li');
-          a = createAnchorTagFromMessageDesc(field)
-          li.appendChild(a)
+          entry = createListEntryFromMessageDesc(field)
+          li.appendChild(entry)
           bob2alice.push(li)
         }
     });
@@ -251,6 +252,21 @@ console.log(jsonlist)
         ul.appendChild(field)
     });
     return ul
+}
+
+function createListEntryFromMessageDesc(messagedesc) {
+        var d  = document.createElement('div');
+        var playbutton = document.createElement('button')
+        playbutton.innerHTML = "- A -"
+        playbutton.setAttribute("style", "font-size : 28px;"); 
+        var erasebutton  = document.createElement('button')
+        erasebutton.innerHTML = "Delete"
+        erasebutton.setAttribute("style", "background-color: red;"); 
+
+        d.appendChild(playbutton)
+        d.appendChild(erasebutton)
+
+        return d
 }
 
 function createAnchorTagFromMessageDesc(messagedesc) {
