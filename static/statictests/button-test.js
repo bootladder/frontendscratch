@@ -5,11 +5,11 @@ btnTestQuery.onclick = function() {
 
     //create a JSON string
     var blah = {}
-    blah.sender       = 7 
-    blah.destination  = 7 
-    blah.topic        = 7 
+    blah.sender       = "alice"
+    blah.destination  = "" 
+    blah.topic        = ""
     blah.timestamp    = 7 
-    blah.audioblobid  = 7 
+    blah.audioblobid  = "s" 
     req = JSON.stringify(blah)
     console.log(req)
 
@@ -26,7 +26,7 @@ btnTestQuery.onclick = function() {
 				processData: false,
 				type: 'POST',
 				success: function(response) {
-						var msg = 'successfully uploaded recorded blob. heres message: ' + response;
+						var msg = 'THIS IS A TEST, GOOD ' + response;
 						alert(msg);
 				},
 				error: function(xhr, status, error) {
