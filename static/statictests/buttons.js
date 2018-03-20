@@ -83,10 +83,10 @@ function deleteRecordedMessage() {
     // Create Form with JSON filename
 		var formData = new FormData();
     var s = {}
-    s.filename = this.id
-		//formData.append('filename', JSON.stringify(s));
-		formData.append('filename', this.id)
-    console.log(s)
+    s.audioblobid = this.id
+		formData.append('filename', JSON.stringify(s));
+	//	formData.append('filename', this.id)
+    console.log("deleteing: " + JSON.stringify(s))
 
     $.ajax({
         //dataType: "json",
