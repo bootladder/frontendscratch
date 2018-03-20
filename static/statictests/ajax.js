@@ -20,6 +20,7 @@ function app_ajax(endpoint, callback, reqobj) {
 				contentType: false,
 				processData: false,
 				type: 'POST',
+				datatype: 'json',
 				success: function(response) {
             console.log("AJAXing... Success!");
             callback(response)
