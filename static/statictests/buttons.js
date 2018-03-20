@@ -8,14 +8,40 @@ var btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')
 
 var divMessagesListSteve = document.getElementById('div-messages-steve')    
 
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
 btnLoadRecordingsSteve.onclick = function() {
 
     a = fetchMessagesForSteve()
     b = createMessageList(a)
-    
+    divMessagesListSteve.innerHTML = ""
+    divMessagesListSteve.appendChild(b) 
 }
+
+// AJAX Request to Server
+// Returns a JS object
+// Parameter (not used yet) : Query 
+function fetchMessagesForSteve() {
+
+    var a = {}
+    a.a = 1
+    a.b = "hello"
+    return a
+}
+
+// Creates DOM element which can go inside a div tag
+// Takes an object with an array of message descriptors
+function createMessageList(a) {
+
+    a = document.createElement('div')
+    a.innerHTML = "hello"
+    return a
+}
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
+
 function playbackRecordedMessage() {
     console.log("loading3")
     var audio = document.getElementById('audio-playback') || new Audio();
