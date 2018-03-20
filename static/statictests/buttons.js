@@ -10,35 +10,27 @@ var divMessagesListSteve = document.getElementById('div-messages-steve')
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
-
+// AJAX Request to Server
+// Callback is called on success
 btnLoadRecordingsSteve.onclick = function() {
 
-    a = fetchMessagesForSteve()
-    b = createMessageList(a)
-    divMessagesListSteve.innerHTML = ""
-    divMessagesListSteve.appendChild(b) 
-}
-
-// AJAX Request to Server
-// Returns a JS object
-// Parameter (not used yet) : Query 
-function fetchMessagesForSteve() {
-
     var a = {}
-    a.a = 1
+    a.sender = "alice"
+    a.destination = "bob"
     a.b = "hello"
-    return a
+
+    app_ajax('query', createMessageList, a)
 }
 
 // Creates DOM element which can go inside a div tag
 // Takes an object with an array of message descriptors
-function createMessageList(a) {
+function createMessageList(obj) {
+    d = document.createElement('div')
+    d.innerHTML = "hello"
 
-    a = document.createElement('div')
-    a.innerHTML = "hello"
-    return a
+    divMessagesListSteve.innerHTML = "yarrr"
+    divMessagesListSteve.appendChild(d) 
 }
-
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
