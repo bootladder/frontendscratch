@@ -12,4 +12,5 @@ dynamicallyLoadScript("webrtc-helpers.js");
 dynamicallyLoadScript("buttons.js");
 dynamicallyLoadScript("button-startrecording.js");
 dynamicallyLoadScript("button-stoprecording.js");
+dynamicallyLoadScript("button-upload-recording.js");
 dynamicallyLoadScript("button-test.js");
