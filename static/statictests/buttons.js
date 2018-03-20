@@ -15,21 +15,56 @@ var divMessagesListSteve = document.getElementById('div-messages-steve')
 btnLoadRecordingsSteve.onclick = function() {
 
     var a = {}
-    a.sender = "alice"
-    a.destination = "bob"
-    a.b = "hello"
-
+    a.sender      = "aaron"
+    a.destination = "steve"
     app_ajax('query', createMessageList, a)
 }
 
 // Creates DOM element which can go inside a div tag
 // Takes an object with an array of message descriptors
 function createMessageList(obj) {
+    
     d = document.createElement('div')
-    d.innerHTML = "hello"
+    ul = document.createElement('ul')
 
-    divMessagesListSteve.innerHTML = "yarrr"
+    console.log(obj)
+    parsedobj = JSON.parse(obj)
+    $.each(parsedobj, function(i, field){
+        var li = document.createElement('li');
+        m = createMessageListEntryFromMessageDesc(field)
+        li.appendChild(m)
+        ul.appendChild(li)
+    });
+
+    d.appendChild(ul)
+
+    divMessagesListSteve.innerHTML = ""
     divMessagesListSteve.appendChild(d) 
+}
+
+function createMessageListEntryFromMessageDesc(md) {
+
+    var d = document.createElement('div')
+    var playbutton = document.createElement('button')
+    playbutton.innerHTML = md.topic
+    if( md.customtopic ) {
+        playbutton.innerHTML = md.customtopic
+    }
+    playbutton.setAttribute("style", "background-color: blue;font-size : 32px;"); 
+    playbutton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/" + md.audioblobid
+
+    playbutton.onclick = playbackRecordedMessage
+
+
+    var erasebutton  = document.createElement('button')
+    erasebutton.innerHTML = "Del"
+    erasebutton.setAttribute("style", "background-color: red;");  
+    erasebutton.onclick = deleteRecordedMessage
+    erasebutton.id = md.audioblobid
+
+    d.appendChild(playbutton)
+    d.appendChild(erasebutton)
+    return d
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
