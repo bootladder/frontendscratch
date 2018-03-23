@@ -52,6 +52,8 @@ function create_messagedesc(fileName,timestamp) {
             document.querySelector('input[name=destination]:checked').value
     var inputTopicVal = 
             document.querySelector('input[name=topic]:checked').value
+    var inputProjectVal = 
+            document.querySelector('input[name=project]:checked').value
     var inputCustomTopicVal = 
             document.getElementById("textinput-customtopic").value
  
@@ -59,6 +61,7 @@ function create_messagedesc(fileName,timestamp) {
     blah.sender = inputSenderVal
     blah.destination = inputDestinationVal
     blah.topic = inputTopicVal
+    blah.project = inputProjectVal
     blah.customtopic = inputCustomTopicVal
     blah.timestamp = timestamp
     blah.audioblobid = fileName

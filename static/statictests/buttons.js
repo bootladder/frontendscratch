@@ -7,6 +7,7 @@ var btnLoadRecordingsSteve = document.getElementById('btn-load-steve')
 var btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')    
 
 var divMessagesListSteve = document.getElementById('div-messages-steve')    
+var divMessagesListAaron = document.getElementById('div-messages-aaron')    
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -17,7 +18,27 @@ btnLoadRecordingsSteve.onclick = function() {
     var a = {}
     a.sender      = "aaron"
     a.destination = "steve"
-    app_ajax('query', createMessageList, a)
+    app_ajax('query', updateMessageListForSteve, a)
+}
+btnLoadRecordingsAaron.onclick = function() {
+
+    var a = {}
+    a.sender      = "steve"
+    a.destination = "aaron"
+    app_ajax('query', updateMessageListForAaron, a)
+}
+
+function updateMessageListForSteve(obj) {
+
+    d = createMessageList(obj)
+    divMessagesListSteve.innerHTML = ""
+    divMessagesListSteve.appendChild(d) 
+}
+function updateMessageListForAaron(obj) {
+
+    d = createMessageList(obj)
+    divMessagesListAaron.innerHTML = ""
+    divMessagesListAaron.appendChild(d) 
 }
 
 // Creates DOM element which can go inside a div tag
@@ -38,8 +59,7 @@ function createMessageList(obj) {
 
     d.appendChild(ul)
 
-    divMessagesListSteve.innerHTML = ""
-    divMessagesListSteve.appendChild(d) 
+    return d
 }
 
 function createMessageListEntryFromMessageDesc(md) {
@@ -50,7 +70,19 @@ function createMessageListEntryFromMessageDesc(md) {
     if( md.customtopic ) {
         playbutton.innerHTML = md.customtopic
     }
-    playbutton.setAttribute("style", "background-color: blue;font-size : 32px;"); 
+    // Set Color of Button
+    if( md.project == "1" ) {
+      playbutton.setAttribute("style", "background-color: blue;font-size : 32px;"); 
+    }
+    else if( md.project == "2" ) {
+      playbutton.setAttribute("style", "background-color: orange;font-size : 32px;"); 
+    }
+    else if( md.project == "3" ) {
+      playbutton.setAttribute("style", "background-color: green;font-size : 32px;"); 
+    }
+    else {
+      playbutton.setAttribute("style", "background-color: gray;font-size : 32px;"); 
+    }
     playbutton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/" + md.audioblobid
 
     playbutton.onclick = playbackRecordedMessage
