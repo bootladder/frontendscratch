@@ -18,7 +18,7 @@ btnProcessRecording.onclick = function() {
     // Create Form with recorded blob and JSON messagedesc
 		var formData = new FormData();
 		formData.append('filename', fileObject.name);
-		formData.append('messagedesc', messagedesc);
+		formData.append('requestmodel', messagedesc);
 		formData.append('file', fileObject);
 
 		console.log("Uploading...");
