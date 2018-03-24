@@ -8,6 +8,7 @@ btnStopRecording.onclick = function() {
 function stopRecordingCallback() {
     var blob = recorder.getBlob();
     audio.src = URL.createObjectURL(blob);
+    audio.muted = false;
     audio.play();
 
     recorder.microphone.stop();

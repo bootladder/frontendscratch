@@ -9,6 +9,7 @@ btnStartRecording.onclick = function() {
 				console.log("getUserMedia OK, callback();");
         setSrcObject(microphone, audio);
         //audio.play(); //has no effect?
+        audio.muted = true; 
 
         recorder = RecordRTC(microphone, {
             type: 'audio',
