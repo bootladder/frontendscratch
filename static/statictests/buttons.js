@@ -5,9 +5,17 @@ var audioPlayback = document.getElementById('audio-playback');
 
 var btnLoadRecordingsSteve = document.getElementById('btn-load-steve')    
 var btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')    
+var btnLoadRecordingsSteveFromTest = 
+                document.getElementById('btn-load-steve-from-test')    
+var btnLoadRecordingsTestFromSteve = 
+                document.getElementById('btn-load-test-from-steve')    
 
 var divMessagesListSteve = document.getElementById('div-messages-steve')    
 var divMessagesListAaron = document.getElementById('div-messages-aaron')    
+var divMessagesListSteveFromTest = 
+                document.getElementById('div-messages-steve-from-test')    
+var divMessagesListTestFromSteve = 
+                document.getElementById('div-messages-test-from-steve')    
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -27,6 +35,22 @@ btnLoadRecordingsAaron.onclick = function() {
     a.destination = "aaron"
     app_ajax('query', updateMessageListForAaron, a)
 }
+/////////////////////////////////
+btnLoadRecordingsSteveFromTest.onclick = function() {
+
+    var a = {}
+    a.sender      = "testdummy"
+    a.destination = "steve"
+    app_ajax('query', updateMessageListForSteveFromTest, a)
+}
+btnLoadRecordingsTestFromSteve.onclick = function() {
+
+    var a = {}
+    a.sender      = "steve"
+    a.destination = "testdummy"
+    app_ajax('query', updateMessageListForTestFromSteve, a)
+}
+//////////////////////////////////
 
 function updateMessageListForSteve(obj) {
 
@@ -40,6 +64,21 @@ function updateMessageListForAaron(obj) {
     divMessagesListAaron.innerHTML = ""
     divMessagesListAaron.appendChild(d) 
 }
+//////////////////////////////////
+function updateMessageListForSteveFromTest(obj) {
+
+    d = createMessageList(obj)
+    divMessagesListSteveFromTest.innerHTML = ""
+    divMessagesListSteveFromTest.appendChild(d) 
+}
+function updateMessageListForTestFromSteve(obj) {
+
+    d = createMessageList(obj)
+    divMessagesListTestFromSteve.innerHTML = ""
+    divMessagesListTestFromSteve.appendChild(d) 
+}
+
+
 
 // Creates DOM element which can go inside a div tag
 // Takes an object with an array of message descriptors
