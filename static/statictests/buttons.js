@@ -116,7 +116,7 @@ function deleteRecordedMessage() {
 		var formData = new FormData();
     var s = {}
     s.audioblobid = this.id
-		formData.append('filename', JSON.stringify(s));
+		formData.append('requestmodel', JSON.stringify(s));
 	//	formData.append('filename', this.id)
     console.log("deleteing: " + JSON.stringify(s))
 
