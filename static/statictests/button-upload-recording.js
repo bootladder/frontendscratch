@@ -15,34 +15,14 @@ btnProcessRecording.onclick = function() {
     // Create JSON messagedesc from DOM
     var messagedesc  = create_messagedesc(fileName,timestamp)
 
-    // Create Form with recorded blob and JSON messagedesc
-		var formData = new FormData();
-		formData.append('filename', fileObject.name);
-		formData.append('requestmodel', messagedesc);
-		formData.append('file', fileObject);
-
+    // POST the message descriptor and file
 		console.log("Uploading...");
-		$.ajax({
-				url: 'https://orbhub.bootladder.com:9002/audiomessageupload', 
-				data: formData,
-				cache: false,
-				contentType: false,
-				processData: false,
-				type: 'POST',
-				success: function(response) {
-						var msg = 'successfully uploaded recorded blob. heres message: ' + response;
-						alert(msg);
-				},
-				error: function(xhr, status, error) {
-						console.log(xhr.responseText);
-						console.log(xhr);
-						console.log(status);
-						console.log(error);
-				}
-		}).fail(function( jqXHR, textStatus ) {  
-        alert( "Triggered fail callback: " + textStatus );  
-     }); 
-;
+    var uploadcb = function(response) {
+        var msg = 'successful upload. heres message: ' + response;
+        alert(msg);
+    }
+
+    app_ajax_with_file('audiomessageupload', uploadcb, messagedesc, fileObject)
 }
 
 function create_messagedesc(fileName,timestamp) {
