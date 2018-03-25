@@ -67,3 +67,10 @@ function app_ajax_with_file(endpoint, callback, reqobj, reqfile) {
         alert( "Triggered AJAX fail callback: " + textStatus );  
      }); 
 }
+
+
+function generic_ajax_success_callback(response) { 
+        s = "AJAX success!  Response: " + response
+        console.log(s)
+}
+

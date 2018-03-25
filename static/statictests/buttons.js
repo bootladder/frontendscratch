@@ -105,27 +105,42 @@ function createMessageListEntryFromMessageDesc(md) {
 
     var d = document.createElement('div')
     var playbutton = document.createElement('button')
+
+    // Set innerHTML of Button
     playbutton.innerHTML = md.topic
     if( md.customtopic ) {
         playbutton.innerHTML = md.customtopic
     }
+
     // Set Color of Button
     if( md.project == "1" ) {
-      playbutton.setAttribute("style", "background-color: blue;font-size : 32px;"); 
+      color = "blue"
     }
     else if( md.project == "2" ) {
-      playbutton.setAttribute("style", "background-color: orange;font-size : 32px;"); 
+      color = "orange"
     }
     else if( md.project == "3" ) {
-      playbutton.setAttribute("style", "background-color: green;font-size : 32px;"); 
+      color = "green"
     }
     else {
-      playbutton.setAttribute("style", "background-color: gray;font-size : 32px;"); 
+      color = "gray"
     }
-    playbutton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/" + md.audioblobid
+
+    // Set Opacity of Button
+    if( md.listenedto == false )
+        opacity = "1"
+    else
+        opacity = "0.2"
+
+    playbutton.setAttribute("style", 
+      "background-color: "+color+";font-size : 32px; opacity:"+opacity); 
+
+    playbutton.id= md.audioblobid
 
     playbutton.onclick = listenToRecordedMessage
 
+
+    // Other Buttons
     var replybutton  = document.createElement('button')
     replybutton.innerHTML = "Reply"
     replybutton.setAttribute("style", "background-color: green;");  
@@ -166,10 +181,10 @@ function vaultRecordedMessage() {
 function listenToRecordedMessage() {
     console.log("loading3")
     var audio = document.getElementById('audio-playback') || new Audio();
-    audio.src= this.id;
+    audio.src= "https://orbhub.bootladder.com:9002/audiomessagedownload/" + this.id;
     audio.load()
 
-    updateMessageDescriptorListenedToState(true) 
+    updateMessageDescriptorListenedToState(this.id,true) 
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -191,7 +206,11 @@ function deleteRecordedMessage() {
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-function updateMessageDescriptorListenedToState(state) {
+function updateMessageDescriptorListenedToState(id,state) {
 
+    var s = {}
+    s.audioblobid = id
+    s.listenedto = state
     
+    app_ajax('update', generic_ajax_success_callback , s)
 }
