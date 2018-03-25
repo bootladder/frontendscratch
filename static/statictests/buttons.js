@@ -126,6 +126,17 @@ function createMessageListEntryFromMessageDesc(md) {
 
     playbutton.onclick = playbackRecordedMessage
 
+    var replybutton  = document.createElement('button')
+    replybutton.innerHTML = "Reply"
+    replybutton.setAttribute("style", "background-color: green;");  
+    replybutton.onclick = replyRecordedMessage
+    replybutton.id = md.audioblobid
+
+    var vaultbutton  = document.createElement('button')
+    vaultbutton.innerHTML = "Vault"
+    vaultbutton.setAttribute("style", "background-color: orange;");  
+    vaultbutton.onclick = vaultRecordedMessage
+    vaultbutton.id = md.audioblobid
 
     var erasebutton  = document.createElement('button')
     erasebutton.innerHTML = "Del"
@@ -134,9 +145,19 @@ function createMessageListEntryFromMessageDesc(md) {
     erasebutton.id = md.audioblobid
 
     d.appendChild(playbutton)
+    d.appendChild(replybutton)
+    d.appendChild(vaultbutton)
     d.appendChild(erasebutton)
     return d
 }
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+
+function replyRecordedMessage() {
+}
+function vaultRecordedMessage() {
+}
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
