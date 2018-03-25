@@ -169,7 +169,7 @@ function listenToRecordedMessage() {
     audio.src= this.id;
     audio.load()
 
-    
+    updateMessageDescriptorListenedToState(true) 
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -177,7 +177,6 @@ function listenToRecordedMessage() {
 function deleteRecordedMessage() {
 
     // Create Form with JSON filename
-		var formData = new FormData();
     var s = {}
     s.audioblobid = this.id
 
@@ -187,26 +186,12 @@ function deleteRecordedMessage() {
     }
 
     app_ajax('delete', successcb, s)
-    
-
-//		formData.append('requestmodel', JSON.stringify(s));
-//	//	formData.append('filename', this.id)
-//    console.log("deleteing: " + JSON.stringify(s))
-//
-//    $.ajax({
-//        //dataType: "json",
-//				type: 'POST',
-//				cache: false,
-//				data: formData,
-//				processData: false,  //stupid necessary thing
-//				contentType: false,  //also necessary
-//        url: "https://orbhub.bootladder.com:9002/audiomessageapi/delete",
-//        success: function(myjson) { 
-//            s = "Deleted Message." + myjson
-//            alert( s )
-//        }
-//    });
 }
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
+
+function updateMessageDescriptorListenedToState(state) {
+
+    
+}
