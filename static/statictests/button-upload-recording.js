@@ -12,7 +12,7 @@ btnProcessRecording.onclick = function() {
 				type: 'audio/wav'
 		});
 
-    // Create JSON messagedesc from DOM
+    // Create messagedesc object from DOM
     var messagedesc  = create_messagedesc(fileName,timestamp)
 
     // POST the message descriptor and file
@@ -45,6 +45,5 @@ function create_messagedesc(fileName,timestamp) {
     blah.customtopic = inputCustomTopicVal
     blah.timestamp = timestamp
     blah.audioblobid = fileName
-    console.log(JSON.stringify(blah))
-    return  JSON.stringify(blah)
+    return  blah
 }
