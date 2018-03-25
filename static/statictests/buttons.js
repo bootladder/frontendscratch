@@ -124,7 +124,7 @@ function createMessageListEntryFromMessageDesc(md) {
     }
     playbutton.id="https://orbhub.bootladder.com:9002/audiomessagedownload/" + md.audioblobid
 
-    playbutton.onclick = playbackRecordedMessage
+    playbutton.onclick = listenToRecordedMessage
 
     var replybutton  = document.createElement('button')
     replybutton.innerHTML = "Reply"
@@ -161,11 +161,15 @@ function vaultRecordedMessage() {
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
-function playbackRecordedMessage() {
+// Load the <audio> with the message
+// Also change the state to "listenedTo = true" and update
+function listenToRecordedMessage() {
     console.log("loading3")
     var audio = document.getElementById('audio-playback') || new Audio();
     audio.src= this.id;
     audio.load()
+
+    
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -176,23 +180,32 @@ function deleteRecordedMessage() {
 		var formData = new FormData();
     var s = {}
     s.audioblobid = this.id
-		formData.append('requestmodel', JSON.stringify(s));
-	//	formData.append('filename', this.id)
-    console.log("deleteing: " + JSON.stringify(s))
 
-    $.ajax({
-        //dataType: "json",
-				type: 'POST',
-				cache: false,
-				data: formData,
-				processData: false,  //stupid necessary thing
-				contentType: false,  //also necessary
-        url: "https://orbhub.bootladder.com:9002/audiomessageapi/delete",
-        success: function(myjson) { 
-            s = "Deleted Message." + myjson
-            alert( s )
-        }
-    });
+    var successcb = function(myjson) { 
+        s = "Deleted Message." + myjson
+        alert( s )
+    }
+
+    app_ajax('delete', successcb, s)
+    
+
+//		formData.append('requestmodel', JSON.stringify(s));
+//	//	formData.append('filename', this.id)
+//    console.log("deleteing: " + JSON.stringify(s))
+//
+//    $.ajax({
+//        //dataType: "json",
+//				type: 'POST',
+//				cache: false,
+//				data: formData,
+//				processData: false,  //stupid necessary thing
+//				contentType: false,  //also necessary
+//        url: "https://orbhub.bootladder.com:9002/audiomessageapi/delete",
+//        success: function(myjson) { 
+//            s = "Deleted Message." + myjson
+//            alert( s )
+//        }
+//    });
 }
 
 ////////////////////////////////////////////////////////////
