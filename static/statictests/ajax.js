@@ -31,7 +31,7 @@ function app_ajax(endpoint, callback, reqobj) {
 						console.log(error);
 				}
 		}).fail(function( jqXHR, textStatus ) {  
-        alert( "Triggered AJAX fail callback: " + textStatus );  
+        alert( "Triggered AJAX fail callback: " + jqXHR.responseText );  
      }); 
 }
 
@@ -62,9 +62,10 @@ function app_ajax_with_file(endpoint, callback, reqobj, reqfile) {
 						console.log(xhr.responseText);
 						console.log(status);
 						console.log(error);
+						alert(xhr.responseText);
 				}
-		}).fail(function( jqXHR, textStatus ) {  
-        alert( "Triggered AJAX fail callback: " + textStatus );  
+		}).fail(function( jqXHR, textStatus, msg ) {  
+        console.log( "Triggered AJAX fail callback: " + jqXHR.responseText);  
      }); 
 }
 
