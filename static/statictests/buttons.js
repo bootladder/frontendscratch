@@ -17,6 +17,8 @@ var divMessagesListSteveFromTest =
 var divMessagesListTestFromSteve = 
                 document.getElementById('div-messages-test-from-steve')    
 
+var messageDescriptors = new Array()
+
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 // AJAX Request to Server
@@ -95,8 +97,13 @@ function createMessageList(obj) {
         li.appendChild(m)
         ul.appendChild(li)
     });
-
     d.appendChild(ul)
+
+    //Populate Global Array of Message Descriptors
+    //Does not belong here!
+    $.each(parsedobj, function(i, field){
+        messageDescriptors[field.audioblobid] = field
+    });
 
     return d
 }
@@ -184,7 +191,10 @@ function listenToRecordedMessage() {
     audio.src= "https://orbhub.bootladder.com:9002/audiomessagedownload/" + this.id;
     audio.load()
 
-    updateMessageDescriptorListenedToState(this.id,true) 
+    if( messageDescriptors[this.id].listenedto == false ) {
+        console.log("Updating ListenedTo State to Server!")
+        updateMessageDescriptorListenedToState(this.id,true) 
+    }
 }
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
