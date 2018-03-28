@@ -6,7 +6,7 @@
 //          which will go into the POST form
 function app_ajax(endpoint, callback, reqobj) {
 
-    forminput = JSON.stringify(reqobj)
+    var forminput = JSON.stringify(reqobj)
 
     // Create Form with recorded blob and JSON messagedesc
 		var formData = new FormData();
@@ -38,7 +38,7 @@ function app_ajax(endpoint, callback, reqobj) {
 
 function app_ajax_with_file(endpoint, callback, reqobj, reqfile) {
 
-    forminput = JSON.stringify(reqobj)
+    var forminput = JSON.stringify(reqobj)
 
     // Create Form with recorded blob and JSON messagedesc
 		var formData = new FormData();
@@ -71,7 +71,21 @@ function app_ajax_with_file(endpoint, callback, reqobj, reqfile) {
 
 
 function generic_ajax_success_callback(response) { 
-        s = "AJAX success!  Response: " + response
+        var s = "AJAX success!  Response: " + response
         console.log(s)
 }
 
+//////////////////////////////////////////////////////////////////
+//This is the shim for portability across clientside and NodeJS
+
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var $ = require('jquery')
+    module.exports = {
+        app_ajax: app_ajax,
+        app_ajax_with_file: app_ajax_with_file
+    }
+  }
+  else {
+    window.app_ajax = app_ajax;
+    window.app_ajax_with_file=app_ajax_with_file
+  }
