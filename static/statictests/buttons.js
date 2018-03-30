@@ -1,4 +1,10 @@
 //Uses jQuery
+console.log("buttons.js being loaded")
+
+
+//kluuuuuuuuuudge!
+function WrapItAll() {
+console.log("assigning button onclick handleres")
 
 var audio = document.querySelector('audio');
 var audioPlayback = document.getElementById('audio-playback');
@@ -53,6 +59,17 @@ btnLoadRecordingsTestFromSteve.onclick = function() {
     app_ajax('query', updateMessageListForTestFromSteve, a)
 }
 //////////////////////////////////
+
+
+}
+
+
+
+
+
+
+
+
 
 function updateMessageListForSteve(obj) {
 
