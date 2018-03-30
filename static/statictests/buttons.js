@@ -18,8 +18,16 @@ var messageDescriptors
 
 
 //kluuuuuuuuuudge!
+
+//////////////////////////////
+// Get handles on the DOM elements
+// Assign onclick handlers to the buttons
+
+
 function WrapItAll() {
 console.log("assigning button onclick handleres")
+
+messageDescriptors = new Array()
 
 audio = document.querySelector('audio');
 audioPlayback = document.getElementById('audio-playback');
@@ -38,12 +46,7 @@ divMessagesListSteveFromTest =
 divMessagesListTestFromSteve = 
             document.getElementById('div-messages-test-from-steve')    
 
-messageDescriptors = new Array()
 
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-// AJAX Request to Server
-// Callback is called on success
 btnLoadRecordingsSteve.onclick = function() {
 
     var a = {}
