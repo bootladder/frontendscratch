@@ -1,29 +1,44 @@
 //Uses jQuery
 console.log("buttons.js being loaded")
 
+var audio
+var audioPlayback
+
+var btnLoadRecordingsSteve
+var btnLoadRecordingsAaron
+var btnLoadRecordingsSteveFromTest
+var btnLoadRecordingsTestFromSteve
+
+var divMessagesListSteve
+var divMessagesListAaron
+var divMessagesListSteveFromTest
+var divMessagesListTestFromSteve
+
+var messageDescriptors
+
 
 //kluuuuuuuuuudge!
 function WrapItAll() {
 console.log("assigning button onclick handleres")
 
-var audio = document.querySelector('audio');
-var audioPlayback = document.getElementById('audio-playback');
+audio = document.querySelector('audio');
+audioPlayback = document.getElementById('audio-playback');
 
-var btnLoadRecordingsSteve = document.getElementById('btn-load-steve')    
-var btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')    
-var btnLoadRecordingsSteveFromTest = 
-                document.getElementById('btn-load-steve-from-test')    
-var btnLoadRecordingsTestFromSteve = 
-                document.getElementById('btn-load-test-from-steve')    
+btnLoadRecordingsSteve = document.getElementById('btn-load-steve')    
+btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')    
+btnLoadRecordingsSteveFromTest = 
+            document.getElementById('btn-load-steve-from-test')    
+btnLoadRecordingsTestFromSteve = 
+            document.getElementById('btn-load-test-from-steve')    
 
-var divMessagesListSteve = document.getElementById('div-messages-steve')    
-var divMessagesListAaron = document.getElementById('div-messages-aaron')    
-var divMessagesListSteveFromTest = 
-                document.getElementById('div-messages-steve-from-test')    
-var divMessagesListTestFromSteve = 
-                document.getElementById('div-messages-test-from-steve')    
+divMessagesListSteve = document.getElementById('div-messages-steve')    
+divMessagesListAaron = document.getElementById('div-messages-aaron')    
+divMessagesListSteveFromTest = 
+            document.getElementById('div-messages-steve-from-test')    
+divMessagesListTestFromSteve = 
+            document.getElementById('div-messages-test-from-steve')    
 
-var messageDescriptors = new Array()
+messageDescriptors = new Array()
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
