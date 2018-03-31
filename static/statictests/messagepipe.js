@@ -2,28 +2,36 @@
 console.log("messagepipe.js being loaded")
 
 
-var messageDescriptors  //All the messages...?
+//These still need to be global.....
+var messageDescriptors
+var audio
+var audioPlayback
+
 
 //////////////////////////////
 // Get handles on the DOM elements
 // Assign onclick handlers to the buttons
 
-function messagepipe_init(divContainer,myname,yourname) {
+function messagepipe_init(divContainer,mynameparam,yournameparam) {
 
     // Ahh, we can use these as function scope,
     // Which kind of makes them like object members
-    var audio
-    var audioPlayback
-
     var btnLoadA  // Load messages for Person A from B
     var btnLoadB  // B from A
 
     var divListA // List of messages for Person A from B
     var divListB // B from A
 
+    var hNameA  //Show the names of the people
+    var hNameB
 
 
-    console.log("assigning button onclick handleres")
+    //Save the name params in function scope
+    var myname = mynameparam
+    var yourname = yournameparam
+
+
+    console.log("my name is" + myname + "your name is" + yourname)
 
     messageDescriptors = new Array()
 
@@ -54,9 +62,8 @@ function messagepipe_init(divContainer,myname,yourname) {
         var a = {}
         a.sender      = yourname
         a.destination = myname
-        app_ajax('query', function(res) {
-            updateMessageList(res,divListA)
-        }, a)
+
+        fetchAndUpdateMessageList(a, divListA)
     }
     btnLoadB.onclick = function() {
 
@@ -67,6 +74,13 @@ function messagepipe_init(divContainer,myname,yourname) {
             updateMessageList(res,divListB)
         }, a)
     }
+}
+
+function fetchAndUpdateMessageList(fetchParam, divParam) {
+    app_ajax('query', function(res) {
+        updateMessageList(res,divParam)
+    },
+    fetchParam)
 }
 
 function updateMessageList(obj,mydiv) {
