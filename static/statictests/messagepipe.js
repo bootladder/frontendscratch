@@ -52,14 +52,14 @@ function messagepipe_init() {
 function updateMessageListForSteve(obj) {
 
     d = createMessageList(obj)
-    divMessagesListSteve.innerHTML = ""
-    divMessagesListSteve.appendChild(d) 
+    divListA.innerHTML = ""
+    divListA.appendChild(d) 
 }
 function updateMessageListForAaron(obj) {
 
     d = createMessageList(obj)
-    divMessagesListAaron.innerHTML = ""
-    divMessagesListAaron.appendChild(d) 
+    divListB.innerHTML = ""
+    divListB.appendChild(d) 
 }
 
 
