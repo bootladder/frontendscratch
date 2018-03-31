@@ -21,6 +21,14 @@ $(document).ready( function() {
         messagepipe_init( 'testmessagepipe', 'steve', 'testdummy' )
     });
 
+    $("#messagepipe2")
+    .load("messagepipe.html", function(z,statustext,z) {
+        if( statustext === "error" )
+          console.log("Error loading messagepipe.html")
+
+        console.log("Loaded the MessagePipe HTML.  Loading the Pipe")
+        messagepipe_init( 'messagepipe2', 'steve', 'aaron' )
+    });
 })
 
 

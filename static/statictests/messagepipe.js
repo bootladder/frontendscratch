@@ -19,7 +19,7 @@ var messageDescriptors  //All the messages...?
 // Get handles on the DOM elements
 // Assign onclick handlers to the buttons
 
-function messagepipe_init() {
+function messagepipe_init(divContainer,sender,destination) {
     console.log("assigning button onclick handleres")
 
     messageDescriptors = new Array()
@@ -27,10 +27,17 @@ function messagepipe_init() {
     audio = document.querySelector('audio');
     audioPlayback = document.getElementById('audio-playback');
 
+    //Get handles on the Template
     btnLoadA = document.getElementById('button-load-messages-a-b')    
     btnLoadB = document.getElementById('button-load-messages-b-a')
     divListA = document.getElementById('div-messages-a-b')    
     divListB = document.getElementById('div-messages-b-a')    
+
+    //Change their IDs
+    btnLoadA.id = 'button-load-messages-'+sender+'-'+destination
+    btnLoadB.id = 'button-load-messages-'+destination+'-'+sender
+    divListA.id = 'div-messages-'+sender+'-'+destination
+    divListB.id = 'div-messages-'+destination+'-'+sender
 
     btnLoadA.onclick = function() {
 
