@@ -5,7 +5,7 @@ $(document).ready( function() {
     dynamicallyLoadScript("https://cdn.webrtc-experiment.com/RecordRTC.js");
     dynamicallyLoadScript("https://webrtc.github.io/adapter/adapter-latest.js");
     dynamicallyLoadScript("webrtc-helpers.js");
-    dynamicallyLoadScript("buttons.js");
+    dynamicallyLoadScript("messagepipe.js");
     dynamicallyLoadScript("button-startrecording.js");
     dynamicallyLoadScript("button-stoprecording.js");
     dynamicallyLoadScript("button-upload-recording.js");
@@ -18,7 +18,7 @@ $(document).ready( function() {
           console.log("Error loading messagepipe.html")
 
         console.log("Loaded the MessagePipe HTML.  Loading the Pipe")
-        messagepipe( 'testmessagepipe', 'steve', 'testdummy' )
+        messagepipe_init( 'testmessagepipe', 'steve', 'testdummy' )
     });
 
 })

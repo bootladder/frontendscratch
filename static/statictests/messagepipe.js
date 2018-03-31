@@ -1,92 +1,52 @@
 //Uses jQuery
-console.log("buttons.js being loaded")
+console.log("messagepipe.js being loaded")
 
+// Aww crap... this needs to be in a class so there can be
+// multiple instances of these variables
 var audio
 var audioPlayback
 
-var btnLoadRecordingsSteve
-var btnLoadRecordingsAaron
-var btnLoadRecordingsSteveFromTest
-var btnLoadRecordingsTestFromSteve
+var btnLoadA  // Load messages for Person A from B
+var btnLoadB  // B from A
 
-var divMessagesListSteve
-var divMessagesListAaron
-var divMessagesListSteveFromTest
-var divMessagesListTestFromSteve
+var divListA // List of messages for Person A from B
+var divListB // B from A
 
-var messageDescriptors
+var messageDescriptors  //All the messages...?
 
-
-//kluuuuuuuuuudge!
 
 //////////////////////////////
 // Get handles on the DOM elements
 // Assign onclick handlers to the buttons
 
+function messagepipe_init() {
+    console.log("assigning button onclick handleres")
 
-function WrapItAll() {
-console.log("assigning button onclick handleres")
+    messageDescriptors = new Array()
 
-messageDescriptors = new Array()
+    audio = document.querySelector('audio');
+    audioPlayback = document.getElementById('audio-playback');
 
-audio = document.querySelector('audio');
-audioPlayback = document.getElementById('audio-playback');
+    btnLoadA = document.getElementById('button-load-messages-a-b')    
+    btnLoadB = document.getElementById('button-load-messages-b-a')
+    divListA = document.getElementById('div-messages-a-b')    
+    divListB = document.getElementById('div-messages-b-a')    
 
-btnLoadRecordingsSteve = document.getElementById('btn-load-steve')    
-btnLoadRecordingsAaron = document.getElementById('btn-load-aaron')    
-btnLoadRecordingsSteveFromTest = 
-            document.getElementById('btn-load-steve-from-test')    
-btnLoadRecordingsTestFromSteve = 
-            document.getElementById('btn-load-test-from-steve')    
+    btnLoadA.onclick = function() {
 
-divMessagesListSteve = document.getElementById('div-messages-steve')    
-divMessagesListAaron = document.getElementById('div-messages-aaron')    
-divMessagesListSteveFromTest = 
-            document.getElementById('div-messages-steve-from-test')    
-divMessagesListTestFromSteve = 
-            document.getElementById('div-messages-test-from-steve')    
+        var a = {}
+        a.sender      = "testdummy"
+        a.destination = "steve"
+        app_ajax('query', updateMessageListForSteve, a)
+    }
+    btnLoadB.onclick = function() {
 
-
-btnLoadRecordingsSteve.onclick = function() {
-
-    var a = {}
-    a.sender      = "aaron"
-    a.destination = "steve"
-    app_ajax('query', updateMessageListForSteve, a)
+        var a = {}
+        a.sender      = "steve"
+        a.destination = "testdummy"
+        app_ajax('query', updateMessageListForAaron, a)
+    }
 }
-btnLoadRecordingsAaron.onclick = function() {
-
-    var a = {}
-    a.sender      = "steve"
-    a.destination = "aaron"
-    app_ajax('query', updateMessageListForAaron, a)
-}
-/////////////////////////////////
-btnLoadRecordingsSteveFromTest.onclick = function() {
-
-    var a = {}
-    a.sender      = "testdummy"
-    a.destination = "steve"
-    app_ajax('query', updateMessageListForSteveFromTest, a)
-}
-btnLoadRecordingsTestFromSteve.onclick = function() {
-
-    var a = {}
-    a.sender      = "steve"
-    a.destination = "testdummy"
-    app_ajax('query', updateMessageListForTestFromSteve, a)
-}
-//////////////////////////////////
-
-
-}
-
-
-
-
-
-
-
 
 
 function updateMessageListForSteve(obj) {
@@ -101,20 +61,6 @@ function updateMessageListForAaron(obj) {
     divMessagesListAaron.innerHTML = ""
     divMessagesListAaron.appendChild(d) 
 }
-//////////////////////////////////
-function updateMessageListForSteveFromTest(obj) {
-
-    d = createMessageList(obj)
-    divMessagesListSteveFromTest.innerHTML = ""
-    divMessagesListSteveFromTest.appendChild(d) 
-}
-function updateMessageListForTestFromSteve(obj) {
-
-    d = createMessageList(obj)
-    divMessagesListTestFromSteve.innerHTML = ""
-    divMessagesListTestFromSteve.appendChild(d) 
-}
-
 
 
 // Creates DOM element which can go inside a div tag
