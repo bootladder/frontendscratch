@@ -1,6 +1,15 @@
 //Uses jQuery
 console.log("messagepipe.js being loaded")
 
+
+var messageDescriptors  //All the messages...?
+
+//////////////////////////////
+// Get handles on the DOM elements
+// Assign onclick handlers to the buttons
+
+function messagepipe_init(divContainer,sender,destination) {
+
 // Aww crap... this needs to be in a class so there can be
 // multiple instances of these variables
 var audio
@@ -12,14 +21,8 @@ var btnLoadB  // B from A
 var divListA // List of messages for Person A from B
 var divListB // B from A
 
-var messageDescriptors  //All the messages...?
 
 
-//////////////////////////////
-// Get handles on the DOM elements
-// Assign onclick handlers to the buttons
-
-function messagepipe_init(divContainer,sender,destination) {
     console.log("assigning button onclick handleres")
 
     messageDescriptors = new Array()
@@ -39,6 +42,21 @@ function messagepipe_init(divContainer,sender,destination) {
     divListA.id = 'div-messages-'+sender+'-'+destination
     divListB.id = 'div-messages-'+destination+'-'+sender
 
+
+function updateMessageListForSteve(obj) {
+
+console.log('My ID is: ' + divListA.id)
+    d = createMessageList(obj)
+    divListA.innerHTML = ""
+    divListA.appendChild(d) 
+}
+function updateMessageListForAaron(obj) {
+
+    d = createMessageList(obj)
+    divListB.innerHTML = ""
+    divListB.appendChild(d) 
+}
+
     btnLoadA.onclick = function() {
 
         var a = {}
@@ -55,19 +73,6 @@ function messagepipe_init(divContainer,sender,destination) {
     }
 }
 
-
-function updateMessageListForSteve(obj) {
-
-    d = createMessageList(obj)
-    divListA.innerHTML = ""
-    divListA.appendChild(d) 
-}
-function updateMessageListForAaron(obj) {
-
-    d = createMessageList(obj)
-    divListB.innerHTML = ""
-    divListB.appendChild(d) 
-}
 
 
 // Creates DOM element which can go inside a div tag
