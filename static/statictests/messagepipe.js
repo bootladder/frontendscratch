@@ -8,18 +8,18 @@ var messageDescriptors  //All the messages...?
 // Get handles on the DOM elements
 // Assign onclick handlers to the buttons
 
-function messagepipe_init(divContainer,sender,destination) {
+function messagepipe_init(divContainer,myname,yourname) {
 
-// Aww crap... this needs to be in a class so there can be
-// multiple instances of these variables
-var audio
-var audioPlayback
+    // Ahh, we can use these as function scope,
+    // Which kind of makes them like object members
+    var audio
+    var audioPlayback
 
-var btnLoadA  // Load messages for Person A from B
-var btnLoadB  // B from A
+    var btnLoadA  // Load messages for Person A from B
+    var btnLoadB  // B from A
 
-var divListA // List of messages for Person A from B
-var divListB // B from A
+    var divListA // List of messages for Person A from B
+    var divListB // B from A
 
 
 
@@ -35,44 +35,46 @@ var divListB // B from A
     btnLoadB = document.getElementById('button-load-messages-b-a')
     divListA = document.getElementById('div-messages-a-b')    
     divListB = document.getElementById('div-messages-b-a')    
+    hNameA   = document.getElementById('NameA')    
+    hNameB   = document.getElementById('NameB')    
 
     //Change their IDs
-    btnLoadA.id = 'button-load-messages-'+sender+'-'+destination
-    btnLoadB.id = 'button-load-messages-'+destination+'-'+sender
-    divListA.id = 'div-messages-'+sender+'-'+destination
-    divListB.id = 'div-messages-'+destination+'-'+sender
+    btnLoadA.id = 'button-load-messages-'+yourname+'-'+myname
+    btnLoadB.id = 'button-load-messages-'+myname+'-'+yourname
+    divListA.id = 'div-messages-'+yourname+'-'+myname
+    divListB.id = 'div-messages-'+myname+'-'+yourname
 
+    //Change the Names
+    hNameA.innerHTML = myname
+    hNameB.innerHTML = yourname
 
-function updateMessageListForSteve(obj) {
-
-console.log('My ID is: ' + divListA.id)
-    d = createMessageList(obj)
-    divListA.innerHTML = ""
-    divListA.appendChild(d) 
-}
-function updateMessageListForAaron(obj) {
-
-    d = createMessageList(obj)
-    divListB.innerHTML = ""
-    divListB.appendChild(d) 
-}
 
     btnLoadA.onclick = function() {
 
         var a = {}
-        a.sender      = "testdummy"
-        a.destination = "steve"
-        app_ajax('query', updateMessageListForSteve, a)
+        a.sender      = yourname
+        a.destination = myname
+        app_ajax('query', function(res) {
+            updateMessageList(res,divListA)
+        }, a)
     }
     btnLoadB.onclick = function() {
 
         var a = {}
-        a.sender      = "steve"
-        a.destination = "testdummy"
-        app_ajax('query', updateMessageListForAaron, a)
+        a.sender      = myname
+        a.destination = yourname
+        app_ajax('query', function(res) {
+            updateMessageList(res,divListB)
+        }, a)
     }
 }
 
+function updateMessageList(obj,mydiv) {
+
+    d = createMessageList(obj)
+    mydiv.innerHTML = ""
+    mydiv.appendChild(d) 
+}
 
 
 // Creates DOM element which can go inside a div tag
