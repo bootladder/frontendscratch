@@ -68,6 +68,10 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
         fetchAndUpdateMessageList(a, divListB)
     }
 
+    // Load the Pipe immediately.
+    // Where should this be?  Not readable
+    LoadPipe()
+
     btnLoadA.onclick = function() {
         LoadPipe()
     }
@@ -203,6 +207,8 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
         if( messageDescriptors[this.id].listenedto == false ) {
             console.log("Updating ListenedTo State to Server!")
             updateMessageDescriptorListenedToState(this.id,true) 
+
+            LoadPipe()
         }
     }
     ////////////////////////////////////////////////////////////
@@ -217,6 +223,7 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
         var successcb = function(myjson) { 
             s = "Deleted Message." + myjson
             alert( s )
+            LoadPipe()
         }
 
         app_ajax('delete', successcb, s)
