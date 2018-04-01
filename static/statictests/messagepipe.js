@@ -56,27 +56,28 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
     hNameA.innerHTML = myname
     hNameB.innerHTML = yourname
 
-
-    btnLoadA.onclick = function() {
+    var LoadPipe = function() {
 
         var a = {}
         a.sender      = yourname
         a.destination = myname
-
         fetchAndUpdateMessageList(a, divListA)
-    }
-    btnLoadB.onclick = function() {
 
-        var a = {}
         a.sender      = myname
         a.destination = yourname
-        app_ajax('query', function(res) {
-            updateMessageList(res,divListB)
-        }, a)
+        fetchAndUpdateMessageList(a, divListB)
+    }
+
+    btnLoadA.onclick = function() {
+        LoadPipe()
+    }
+    btnLoadB.onclick = function() {
+        LoadPipe()
     }
 }
 
 function fetchAndUpdateMessageList(fetchParam, divParam) {
+
     app_ajax('query', function(res) {
         updateMessageList(res,divParam)
     },
