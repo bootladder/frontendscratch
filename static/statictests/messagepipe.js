@@ -159,13 +159,13 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
 
         playbutton.onclick = listenToRecordedMessage
 
-
         // Other Buttons
         var replybutton  = document.createElement('button')
         replybutton.innerHTML = "Reply"
         replybutton.setAttribute("style", "background-color: green;");  
         replybutton.onclick = replyRecordedMessage
         replybutton.id = md.audioblobid
+        replybutton.messagedesc = md
 
         var vaultbutton  = document.createElement('button')
         vaultbutton.innerHTML = "Vault"
@@ -189,6 +189,10 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
     ////////////////////////////////////////////////////////////
 
     function replyRecordedMessage() {
+
+        window.location.href='#div-audio-message-metadata-select'
+        console.log(this.messagedesc)
+        audiomessagemetadataselect_settomessagedescriptor(this.messagedesc)
     }
     function vaultRecordedMessage() {
     }
@@ -210,6 +214,9 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
 
             LoadPipe()
         }
+
+        window.location.href='#divAudioPlayback'
+
     }
     ////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////
