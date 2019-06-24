@@ -4,3 +4,4 @@ hellobeego
 *.key
 *.elmi
 *.elmo
+elmapp.js

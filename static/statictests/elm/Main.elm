@@ -19,12 +19,14 @@ main =
 
 
 type alias Model =
-    Int
+  { hello : String
+  }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
-    ( 50, Cmd.none )
+
+init : Int -> ( Model, Cmd Msg )
+init a =
+    ( Model "uninint", Cmd.none )
 
 
 
@@ -32,11 +34,8 @@ init _ =
 
 
 type Msg
-    = Increment
-    | Decrement
-    | Slider String
-    | Noop
-    | Hover Int Float Float
+    = Noop
+    | Hello String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -45,22 +44,7 @@ update msg model =
         Noop ->
             ( model, Cmd.none )
 
-        Increment ->
-            ( model + 1, Cmd.none )
-
-        Decrement ->
-            ( model - 1, Cmd.none )
-
-        Slider s ->
-            case String.toInt s of
-                Nothing ->
-                    ( 1, Cmd.none )
-
-                Just i ->
-                    ( i, Cmd.none )
-
-        Hover index x y ->
-            ( index * 5, Cmd.none )
+        Hello str -> ({model | hello=str} , Cmd.none)
 
 
 port selectedIndex : (Value -> msg) -> Sub msg
@@ -75,12 +59,12 @@ decodeValue : Value -> Msg
 decodeValue x =
     let
         ( index, error ) =
-            case Decode.decodeValue (Decode.field "index" Decode.int) x of
-                Ok i ->
-                    ( i, False )
+            case Decode.decodeValue (Decode.field "hello" Decode.string) x of
+                Ok s ->
+                    ( s, False )
 
                 Err _ ->
-                    ( 0, True )
+                    ( "bad", True )
 
         ( decodedPercent, error1 ) =
             case Decode.decodeValue (Decode.field "x" Decode.float) x of
@@ -97,12 +81,28 @@ decodeValue x =
 
                 Err _ ->
                     ( 0, True )
-    in
-    if (error || error1 || error2) then
-        Slider <| String.fromInt 99
 
-    else
-        Hover index decodedPercent decodedY
+
+
+        messageDescDecoder: Decoder MessageDesc
+        messageDescDecoder =
+            Decode.decodeValue (Decode.field "sender" Decode.string)
+            JD.map3 Person
+                (field "id" int)
+                (field "name" string)
+                (field "address" addressDecoder)
+
+        (somethingfromjson, error3) =
+            case Decode.decodeValue (Decode.list messageDescDecoder) x of
+                Ok i ->
+                    ( "huuur", False )
+
+                Err _ ->
+                    ( "duuur", True )
+
+
+    in
+        Hello index
 
 
 
@@ -114,6 +114,7 @@ view model =
     div [ class "elm-svg" ]
         [ div [ class "dice" ]
             [ 
+             text  model.hello
             ]
         , div [ class "logicgates" ]
             [ 

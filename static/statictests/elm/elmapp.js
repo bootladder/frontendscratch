@@ -4310,6 +4310,9 @@ function _Browser_load(url)
 		}
 	}));
 }
+var author$project$Main$Model = function (hello) {
+	return {hello: hello};
+};
 var elm$core$Basics$False = {$: 'False'};
 var elm$core$Basics$True = {$: 'True'};
 var elm$core$Result$isOk = function (result) {
@@ -4787,20 +4790,18 @@ var elm$json$Json$Decode$errorToStringHelp = F2(
 	});
 var elm$core$Platform$Cmd$batch = _Platform_batch;
 var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
-var author$project$Main$init = function (_n0) {
-	return _Utils_Tuple2(50, elm$core$Platform$Cmd$none);
+var author$project$Main$init = function (a) {
+	return _Utils_Tuple2(
+		author$project$Main$Model('uninint'),
+		elm$core$Platform$Cmd$none);
 };
-var author$project$Main$Hover = F3(
-	function (a, b, c) {
-		return {$: 'Hover', a: a, b: b, c: c};
-	});
-var author$project$Main$Slider = function (a) {
-	return {$: 'Slider', a: a};
+var author$project$Main$Hello = function (a) {
+	return {$: 'Hello', a: a};
 };
 var elm$json$Json$Decode$decodeValue = _Json_run;
 var elm$json$Json$Decode$field = _Json_decodeField;
 var elm$json$Json$Decode$float = _Json_decodeFloat;
-var elm$json$Json$Decode$int = _Json_decodeInt;
+var elm$json$Json$Decode$string = _Json_decodeString;
 var author$project$Main$decodeValue = function (x) {
 	var _n0 = function () {
 		var _n1 = A2(
@@ -4833,49 +4834,35 @@ var author$project$Main$decodeValue = function (x) {
 	var _n4 = function () {
 		var _n5 = A2(
 			elm$json$Json$Decode$decodeValue,
-			A2(elm$json$Json$Decode$field, 'index', elm$json$Json$Decode$int),
+			A2(elm$json$Json$Decode$field, 'hello', elm$json$Json$Decode$string),
 			x);
 		if (_n5.$ === 'Ok') {
-			var i = _n5.a;
-			return _Utils_Tuple2(i, false);
+			var s = _n5.a;
+			return _Utils_Tuple2(s, false);
 		} else {
-			return _Utils_Tuple2(0, true);
+			return _Utils_Tuple2('bad', true);
 		}
 	}();
 	var index = _n4.a;
 	var error = _n4.b;
-	return (error || (error1 || error2)) ? author$project$Main$Slider(
-		elm$core$String$fromInt(99)) : A3(author$project$Main$Hover, index, decodedPercent, decodedY);
+	return author$project$Main$Hello(index);
 };
 var elm$json$Json$Decode$value = _Json_decodeValue;
 var author$project$Main$selectedIndex = _Platform_incomingPort('selectedIndex', elm$json$Json$Decode$value);
 var author$project$Main$subscriptions = function (model) {
 	return author$project$Main$selectedIndex(author$project$Main$decodeValue);
 };
-var elm$core$String$toInt = _String_toInt;
 var author$project$Main$update = F2(
 	function (msg, model) {
-		switch (msg.$) {
-			case 'Noop':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'Increment':
-				return _Utils_Tuple2(model + 1, elm$core$Platform$Cmd$none);
-			case 'Decrement':
-				return _Utils_Tuple2(model - 1, elm$core$Platform$Cmd$none);
-			case 'Slider':
-				var s = msg.a;
-				var _n1 = elm$core$String$toInt(s);
-				if (_n1.$ === 'Nothing') {
-					return _Utils_Tuple2(1, elm$core$Platform$Cmd$none);
-				} else {
-					var i = _n1.a;
-					return _Utils_Tuple2(i, elm$core$Platform$Cmd$none);
-				}
-			default:
-				var index = msg.a;
-				var x = msg.b;
-				var y = msg.c;
-				return _Utils_Tuple2(index * 5, elm$core$Platform$Cmd$none);
+		if (msg.$ === 'Noop') {
+			return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+		} else {
+			var str = msg.a;
+			return _Utils_Tuple2(
+				_Utils_update(
+					model,
+					{hello: str}),
+				elm$core$Platform$Cmd$none);
 		}
 	});
 var elm$core$Basics$identity = function (x) {
@@ -4896,6 +4883,9 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
+var author$project$Main$text = elm$svg$Svg$text;
 var elm$html$Html$div = _VirtualDom_node('div');
 var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
 var author$project$Main$view = function (model) {
@@ -4913,7 +4903,10 @@ var author$project$Main$view = function (model) {
 					[
 						elm$svg$Svg$Attributes$class('dice')
 					]),
-				_List_Nil),
+				_List_fromArray(
+					[
+						author$project$Main$text(model.hello)
+					])),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -5118,6 +5111,7 @@ var elm$core$String$left = F2(
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
 var elm$core$String$contains = _String_contains;
+var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {
 		return {fragment: fragment, host: host, path: path, port_: port_, protocol: protocol, query: query};
@@ -5225,7 +5219,7 @@ var elm$url$Url$fromString = function (str) {
 		A2(elm$core$String$dropLeft, 8, str)) : elm$core$Maybe$Nothing);
 };
 var elm$browser$Browser$element = _Browser_element;
+var elm$json$Json$Decode$int = _Json_decodeInt;
 var author$project$Main$main = elm$browser$Browser$element(
 	{init: author$project$Main$init, subscriptions: author$project$Main$subscriptions, update: author$project$Main$update, view: author$project$Main$view});
-_Platform_export({'Main':{'init':author$project$Main$main(
-	elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));
+_Platform_export({'Main':{'init':author$project$Main$main(elm$json$Json$Decode$int)(0)}});}(this));

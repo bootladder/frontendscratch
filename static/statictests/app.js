@@ -11,6 +11,8 @@ $(document).ready( function() {
     dynamicallyLoadScript("button-upload-recording.js");
     dynamicallyLoadScript("ajax.js");
     dynamicallyLoadScript("button-test.js");
+    dynamicallyLoadScript("elmpipe.js");
+
 
     $("#testmessagepipe")
     .load("messagepipe.html", function(z,statustext,z) {
@@ -29,6 +31,8 @@ $(document).ready( function() {
         console.log("Loaded the MessagePipe HTML.  Loading the Pipe")
         messagepipe_init( 'messagepipe2', 'steve', 'aaron' )
     });
+
+
 })
 
 

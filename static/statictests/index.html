@@ -5,8 +5,18 @@
         <script src="/elm/elmapp.js"></script>
         <script>
          var app = Elm.Main.init({
-             node: document.getElementById('elm-place')
+             node: document.getElementById('elm-place'),
+             flags: 77
          });
+
+         //obj = {
+         //    hello: " yeaerr hello!"
+         //}
+         //app.ports.selectedIndex.send(obj)
+         function elm_send_port(obj){
+
+             app.ports.selectedIndex.send(obj)
+         }
         </script>
     </p>
 </div>
