@@ -1,3 +1,4 @@
+audioserverurl = "http://localhost:9002"
 
 // This is the generic AJAX call.
 // Param:  the API endpoint name (last part of the URL)
@@ -14,7 +15,7 @@ function app_ajax(endpoint, callback, reqobj) {
 
 		console.log("AJAXing...");
 		$.ajax({
-				url: 'https://orbhub.bootladder.com:9002/audiomessageapi/'+endpoint, 
+				url: audioserverurl+'/audiomessageapi/'+endpoint, 
 				data: formData,
 				cache: false,
 				contentType: false,
@@ -47,7 +48,7 @@ function app_ajax_with_file(endpoint, callback, reqobj, reqfile) {
 
 		console.log("AJAXing...");
 		$.ajax({
-				url: 'https://orbhub.bootladder.com:9002/audiomessageapi/'+endpoint, 
+				url: audioserverurl + '/audiomessageapi/'+endpoint, 
 				data: formData,
 				cache: false,
 				contentType: false,

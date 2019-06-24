@@ -1,3 +1,4 @@
+audioserverurl = "http://localhost:9002"
 //Uses jQuery
 console.log("messagepipe.js being loaded")
 
@@ -205,7 +206,7 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
     function listenToRecordedMessage() {
         console.log("loading3")
         var audio = document.getElementById('audio-playback') || new Audio();
-        audio.src= "https://orbhub.bootladder.com:9002/audiomessagedownload/" + this.id;
+        audio.src= audioserverurl+"/audiomessagedownload/" + this.id;
         audio.load()
 
         if( messageDescriptors[this.id].listenedto == false ) {
