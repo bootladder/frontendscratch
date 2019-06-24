@@ -2,3 +2,5 @@
 hellobeego
 *.crt
 *.key
+*.elmi
+*.elmo

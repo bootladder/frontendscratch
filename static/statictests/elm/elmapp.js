@@ -4878,8 +4878,6 @@ var author$project$Main$update = F2(
 				return _Utils_Tuple2(index * 5, elm$core$Platform$Cmd$none);
 		}
 	});
-var author$project$Main$Decrement = {$: 'Decrement'};
-var author$project$Main$Increment = {$: 'Increment'};
 var elm$core$Basics$identity = function (x) {
 	return x;
 };
@@ -4898,121 +4896,63 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
-var elm$html$Html$Attributes$attribute = elm$virtual_dom$VirtualDom$attribute;
-var author$project$Main$attribute = elm$html$Html$Attributes$attribute;
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
-var author$project$Main$text = elm$svg$Svg$text;
-var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$g = elm$svg$Svg$trustedNode('g');
-var elm$virtual_dom$VirtualDom$nodeNS = function (tag) {
-	return _VirtualDom_nodeNS(
-		_VirtualDom_noScript(tag));
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var author$project$Main$view = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$class('elm-svg')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('dice')
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('logicgates')
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('fractals')
+					]),
+				_List_Nil)
+			]));
 };
-var elm$svg$Svg$node = elm$virtual_dom$VirtualDom$nodeNS('http://www.w3.org/2000/svg');
-var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
-var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
-var elm$svg$Svg$Attributes$id = _VirtualDom_attribute('id');
-var author$project$Main$svgPostsTitle = A2(
-	elm$svg$Svg$svg,
-	_List_fromArray(
-		[
-			A2(author$project$Main$attribute, 'height', '100.00000000000001'),
-			A2(author$project$Main$attribute, 'width', '150'),
-			A2(author$project$Main$attribute, 'xmlns', 'http://www.w3.org/2000/svg'),
-			A2(author$project$Main$attribute, 'xmlns:svg', 'http://www.w3.org/2000/svg')
-		]),
-	_List_fromArray(
-		[
-			A2(
-			elm$svg$Svg$g,
-			_List_Nil,
-			_List_fromArray(
-				[
-					A3(
-					elm$svg$Svg$node,
-					'title',
-					_List_Nil,
-					_List_fromArray(
-						[
-							author$project$Main$text('Layer 1')
-						])),
-					A3(
-					elm$svg$Svg$node,
-					'text',
-					_List_fromArray(
-						[
-							elm$svg$Svg$Attributes$fill('#725b2c'),
-							A2(author$project$Main$attribute, 'font-family', 'Monospace'),
-							A2(author$project$Main$attribute, 'font-size', '24'),
-							elm$svg$Svg$Attributes$id('svg_32'),
-							A2(author$project$Main$attribute, 'stroke', '#000000'),
-							A2(author$project$Main$attribute, 'stroke-dasharray', 'null'),
-							A2(author$project$Main$attribute, 'stroke-linecap', 'null'),
-							A2(author$project$Main$attribute, 'stroke-linejoin', 'null'),
-							A2(author$project$Main$attribute, 'stroke-width', '0'),
-							A2(author$project$Main$attribute, 'text-anchor', 'middle'),
-							A2(author$project$Main$attribute, 'transform', 'matrix(2.0224413590676282,0,0,2.0035618577975565,-14.422150537027019,-14.046823513059891) '),
-							A2(author$project$Main$attribute, 'x', '44.28247'),
-							A2(author$project$Main$attribute, 'xml:space', 'preserve'),
-							A2(author$project$Main$attribute, 'y', '39.38394')
-						]),
-					_List_fromArray(
-						[
-							author$project$Main$text('Posts')
-						]))
-				]))
-		]));
-var author$project$Main$Line = F3(
-	function (p1, p2, depth) {
-		return {depth: depth, p1: p1, p2: p2};
-	});
-var author$project$Main$Point = F2(
-	function (x, y) {
-		return {x: x, y: y};
-	});
-var elm$core$Basics$cos = _Basics_cos;
-var elm$core$Basics$negate = function (n) {
-	return -n;
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
 };
-var elm$core$Basics$pow = _Basics_pow;
-var elm$core$Basics$round = _Basics_round;
-var author$project$Main$draw2LinesOnPointReturning2Points = F3(
-	function (point, angle, depth) {
-		var r = elm$core$Basics$round(
-			A2(elm$core$Basics$pow, 2, depth) / 10);
-		var newY1 = point.y + (2 * r);
-		var newY0 = point.y + (2 * r);
-		var newX1 = point.x + (2 * r);
-		var newX0 = point.x + elm$core$Basics$round(
-			elm$core$Basics$cos(angle) * (((-1) * 2) * r));
-		return _Utils_Tuple2(
-			_List_fromArray(
-				[
-					A3(
-					author$project$Main$Line,
-					point,
-					A2(author$project$Main$Point, newX0, newY0),
-					depth),
-					A3(
-					author$project$Main$Line,
-					point,
-					A2(author$project$Main$Point, newX1, newY1),
-					depth)
-				]),
-			_List_fromArray(
-				[
-					A2(author$project$Main$Point, newX0, newY0),
-					A2(author$project$Main$Point, newX1, newY1)
-				]));
-	});
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
+	}
+};
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
+};
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5068,17 +5008,6 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
-var elm$core$List$append = F2(
-	function (xs, ys) {
-		if (!ys.b) {
-			return xs;
-		} else {
-			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
-		}
-	});
-var elm$core$List$concat = function (lists) {
-	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
-};
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(
@@ -5093,329 +5022,6 @@ var elm$core$List$map = F2(
 			_List_Nil,
 			xs);
 	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var author$project$Main$drawTreeOnPoints = F3(
-	function (points, angle0, depth) {
-		if (!depth) {
-			return _List_Nil;
-		} else {
-			var thisDepth = depth;
-			var process = function (x) {
-				return A3(author$project$Main$draw2LinesOnPointReturning2Points, x, angle0, depth);
-			};
-			var linesAndPoints = A2(elm$core$List$map, process, points);
-			var linesOnly = elm$core$List$concat(
-				A2(elm$core$List$map, elm$core$Tuple$first, linesAndPoints));
-			var pointsOnly = elm$core$List$concat(
-				A2(elm$core$List$map, elm$core$Tuple$second, linesAndPoints));
-			return _Utils_ap(
-				linesOnly,
-				A3(author$project$Main$drawTreeOnPoints, pointsOnly, angle0 * 0.7, thisDepth - 1));
-		}
-	});
-var elm$core$String$fromFloat = _String_fromNumber;
-var elm$svg$Svg$line = elm$svg$Svg$trustedNode('line');
-var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
-var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
-var elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
-var elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
-var elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
-var elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
-var author$project$Main$drawLine = F3(
-	function (p0, p1, depth) {
-		var width = 0.1 + (A2(elm$core$Basics$pow, 2.0, depth) / 200);
-		return A2(
-			elm$svg$Svg$line,
-			_List_fromArray(
-				[
-					elm$svg$Svg$Attributes$x1(
-					elm$core$String$fromInt(p0.x)),
-					elm$svg$Svg$Attributes$y1(
-					elm$core$String$fromInt(p0.y)),
-					elm$svg$Svg$Attributes$x2(
-					elm$core$String$fromInt(p1.x)),
-					elm$svg$Svg$Attributes$y2(
-					elm$core$String$fromInt(p1.y)),
-					elm$svg$Svg$Attributes$stroke('green'),
-					elm$svg$Svg$Attributes$strokeWidth(
-					elm$core$String$fromFloat(width))
-				]),
-			_List_Nil);
-	});
-var author$project$Main$line2Svg = function (line) {
-	return A3(author$project$Main$drawLine, line.p1, line.p2, line.depth);
-};
-var elm$core$Basics$composeL = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var elm$core$Basics$pi = _Basics_pi;
-var author$project$Main$drawTreeThing = function (scale) {
-	var transformLine = F3(
-		function (f1, f2, line) {
-			return A3(
-				author$project$Main$Line,
-				f1(line.p1),
-				f2(line.p2),
-				line.depth);
-		});
-	var reflectPointY = function (p) {
-		return A2(author$project$Main$Point, 420 - p.x, p.y);
-	};
-	var reflectPointX = function (p) {
-		return A2(author$project$Main$Point, p.x, 420 - p.y);
-	};
-	var reflectLineY = A2(transformLine, reflectPointY, reflectPointY);
-	var reflectLineX = A2(transformLine, reflectPointX, reflectPointX);
-	var myReflections = _List_fromArray(
-		[
-			elm$core$Basics$identity,
-			reflectLineX,
-			reflectLineY,
-			A2(elm$core$Basics$composeL, reflectLineX, reflectLineY)
-		]);
-	var myLines = A3(
-		author$project$Main$drawTreeOnPoints,
-		_List_fromArray(
-			[
-				A2(author$project$Main$Point, 0, 0)
-			]),
-		((scale * 1) * elm$core$Basics$pi) / 32,
-		10);
-	var myLineSets = A2(
-		elm$core$List$map,
-		function (fun) {
-			return A2(elm$core$List$map, fun, myLines);
-		},
-		myReflections);
-	return A2(
-		elm$core$List$map,
-		author$project$Main$line2Svg,
-		elm$core$List$concat(myLineSets));
-};
-var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
-var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
-var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
-var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
-var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
-var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
-var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
-var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
-var author$project$Main$svgTree = function (scale) {
-	return A2(
-		elm$svg$Svg$svg,
-		_List_fromArray(
-			[
-				elm$svg$Svg$Attributes$width('120'),
-				elm$svg$Svg$Attributes$height('120'),
-				elm$svg$Svg$Attributes$viewBox('0 0 420 420'),
-				elm$svg$Svg$Attributes$fill('white'),
-				elm$svg$Svg$Attributes$stroke('black'),
-				elm$svg$Svg$Attributes$strokeWidth('3')
-			]),
-		elm$core$List$concat(
-			_List_fromArray(
-				[
-					_List_fromArray(
-					[
-						A2(
-						elm$svg$Svg$rect,
-						_List_fromArray(
-							[
-								elm$svg$Svg$Attributes$x('0'),
-								elm$svg$Svg$Attributes$y('0'),
-								elm$svg$Svg$Attributes$width('420'),
-								elm$svg$Svg$Attributes$height('420'),
-								elm$svg$Svg$Attributes$rx('15'),
-								elm$svg$Svg$Attributes$ry('15')
-							]),
-						_List_Nil)
-					]),
-					author$project$Main$drawTreeThing(scale)
-				])));
-};
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$input = _VirtualDom_node('input');
-var elm$json$Json$Encode$string = _Json_wrap;
-var elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			elm$json$Json$Encode$string(string));
-	});
-var elm$html$Html$Attributes$max = elm$html$Html$Attributes$stringProperty('max');
-var elm$html$Html$Attributes$min = elm$html$Html$Attributes$stringProperty('min');
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$virtual_dom$VirtualDom$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
-var elm$html$Html$Events$on = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$Normal(decoder));
-	});
-var elm$html$Html$Events$onClick = function (msg) {
-	return A2(
-		elm$html$Html$Events$on,
-		'click',
-		elm$json$Json$Decode$succeed(msg));
-};
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$json$Json$Decode$string = _Json_decodeString;
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
-};
-var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var elm$svg$Svg$Attributes$type_ = _VirtualDom_attribute('type');
-var author$project$Main$view = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$svg$Svg$Attributes$class('elm-svg')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('dice')
-					]),
-				_List_fromArray(
-					[author$project$Main$svgPostsTitle])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('logicgates')
-					]),
-				_List_Nil),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('fractals')
-					]),
-				_List_fromArray(
-					[
-						author$project$Main$svgTree(model),
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Main$Decrement)
-									]),
-								_List_fromArray(
-									[
-										author$project$Main$text('-')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										author$project$Main$text(
-										elm$core$String$fromInt(model))
-									])),
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Events$onClick(author$project$Main$Increment)
-									]),
-								_List_fromArray(
-									[
-										author$project$Main$text('+')
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$input,
-								_List_fromArray(
-									[
-										elm$svg$Svg$Attributes$type_('range'),
-										elm$html$Html$Attributes$min('0'),
-										elm$html$Html$Attributes$max('200'),
-										elm$html$Html$Attributes$value(
-										elm$core$String$fromInt(model)),
-										elm$html$Html$Events$onInput(author$project$Main$Slider)
-									]),
-								_List_Nil),
-								author$project$Main$text(
-								elm$core$String$fromInt(model))
-							]))
-					]))
-			]));
-};
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
-	}
-};
-var elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
-var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$Task$andThen = _Scheduler_andThen;
 var elm$core$Task$map = F2(
 	function (func, taskA) {
