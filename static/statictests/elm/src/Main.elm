@@ -1,4 +1,4 @@
-port module Main exposing (..)
+port module Main exposing (Model, Msg(..), attribute, decodeValue, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, text, update, view)
 
 import Browser
 import Html exposing (Attribute, Html, button, div, input, text)
@@ -6,9 +6,10 @@ import Html.Attributes
 import Html.Events exposing (onClick, onInput)
 import Json.Decode as Decode
 import Json.Encode exposing (Value)
+import MessagePipe exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import MessagePipe exposing (..)
+import Http
 
 
 main =
@@ -20,14 +21,20 @@ main =
 
 
 type alias Model =
-  { hello : String
-  }
+    { hello : String
+    }
 
+
+type alias MessageDescriptor =
+    { sender: String
+    }
 
 
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint", httpFetchMessages "steve" "aaron")
+    ( Model "uninint", httpFetchMessages "steve" "aaron" )
+
+
 
 -- HTTP Request  (Query for Books)
 
@@ -42,19 +49,15 @@ httpFetchMessages sender destination =
                     , ( "destination", Json.Encode.string destination )
                     ]
         , url = "http://localhost:9002/audiomessageapi/query"
-        , expect = Http.expectJson ReceivedQueryResults queryDecoder
+        , expect = Http.expectJson ReceivedMessageDescriptors queryDecoder
         }
 
 
 queryDecoder : Decode.Decoder (List MessageDescriptor)
 queryDecoder =
     Decode.list <|
-        Decode.map5 MessageDescriptor
+        Decode.map MessageDescriptor
             (Decode.at [ "title" ] Decode.string)
-            (Decode.at [ "authors" ] <| Decode.list Decode.string)
-            (Decode.at [ "publisher" ] Decode.string)
-            (Decode.at [ "imagelink" ] Decode.string)
-            (Decode.at [ "moreinfolink" ] Decode.string)
 
 
 
@@ -64,6 +67,7 @@ queryDecoder =
 type Msg
     = Noop
     | Hello String
+    | ReceivedMessageDescriptors (Result Http.Error (List MessageDescriptor))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -72,7 +76,10 @@ update msg model =
         Noop ->
             ( model, Cmd.none )
 
-        Hello str -> ({model | hello=str} , Cmd.none)
+        Hello str ->
+            ( { model | hello = str }, Cmd.none )
+
+        ReceivedMessageDescriptors result -> ( model, Cmd.none )
 
 
 port selectedIndex : (Value -> msg) -> Sub msg
@@ -110,27 +117,23 @@ decodeValue x =
                 Err _ ->
                     ( 0, True )
 
-
-
---        messageDescDecoder: Decoder MessageDesc
---        messageDescDecoder =
---            Decode.decodeValue (Decode.field "sender" Decode.string)
---            JD.map3 Person
---                (field "id" int)
---                (field "name" string)
---                (field "address" addressDecoder)
---
---        (somethingfromjson, error3) =
---            case Decode.decodeValue (Decode.list messageDescDecoder) x of
---                Ok i ->
---                    ( "huuur", False )
---
---                Err _ ->
---                    ( "duuur", True )
-
-
+        --        messageDescDecoder: Decoder MessageDesc
+        --        messageDescDecoder =
+        --            Decode.decodeValue (Decode.field "sender" Decode.string)
+        --            JD.map3 Person
+        --                (field "id" int)
+        --                (field "name" string)
+        --                (field "address" addressDecoder)
+        --
+        --        (somethingfromjson, error3) =
+        --            case Decode.decodeValue (Decode.list messageDescDecoder) x of
+        --                Ok i ->
+        --                    ( "huuur", False )
+        --
+        --                Err _ ->
+        --                    ( "duuur", True )
     in
-        Hello index
+    Hello index
 
 
 
@@ -139,19 +142,24 @@ decodeValue x =
 
 view : Model -> Html Msg
 view model =
+    let
+        messageDesc ={ sender = "steve"}
+    in
     div [ class "elm-svg" ]
         [ div [ class "dice" ]
-            [ 
-             text  model.hello
+            [ text model.hello
             ]
         , div [ class "logicgates" ]
-            [ 
-            ]
+            []
         , div [ class "fractals" ]
-            [
-             svgDie 5
+            [ svgDie 5
+            , svgMessagePipe messageDesc
             ]
         ]
+
+svgMessagePipe : MessageDescriptor -> Html msg
+svgMessagePipe messageDesc = div [] []
+
 
 
 attribute =
@@ -164,5 +172,3 @@ text =
 
 path =
     Svg.path
-
-
