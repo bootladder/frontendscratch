@@ -4886,66 +4886,81 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$svg$Svg$text = elm$virtual_dom$VirtualDom$text;
 var author$project$Main$text = elm$svg$Svg$text;
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
-var author$project$Main$view = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$svg$Svg$Attributes$class('elm-svg')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('dice')
-					]),
-				_List_fromArray(
-					[
-						author$project$Main$text(model.hello)
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('logicgates')
-					]),
-				_List_Nil),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$svg$Svg$Attributes$class('fractals')
-					]),
-				_List_Nil)
-			]));
-};
-var elm$browser$Browser$External = function (a) {
-	return {$: 'External', a: a};
-};
-var elm$browser$Browser$Internal = function (a) {
-	return {$: 'Internal', a: a};
-};
-var elm$browser$Browser$Dom$NotFound = function (a) {
-	return {$: 'NotFound', a: a};
-};
-var elm$core$Basics$never = function (_n0) {
-	never:
-	while (true) {
-		var nvr = _n0.a;
-		var $temp$_n0 = nvr;
-		_n0 = $temp$_n0;
-		continue never;
+var elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var elm$svg$Svg$circle = elm$svg$Svg$trustedNode('circle');
+var elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var author$project$MessagePipe$listOfSvgs = function (dieFace) {
+	switch (dieFace) {
+		case 1:
+			return _List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('50'),
+							elm$svg$Svg$Attributes$cy('50'),
+							elm$svg$Svg$Attributes$r('10'),
+							elm$svg$Svg$Attributes$fill('black')
+						]),
+					_List_Nil)
+				]);
+		case 2:
+			return _List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('25'),
+							elm$svg$Svg$Attributes$cy('25'),
+							elm$svg$Svg$Attributes$r('10'),
+							elm$svg$Svg$Attributes$fill('black')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('75'),
+							elm$svg$Svg$Attributes$cy('75'),
+							elm$svg$Svg$Attributes$r('10'),
+							elm$svg$Svg$Attributes$fill('black')
+						]),
+					_List_Nil)
+				]);
+		default:
+			return _List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('50'),
+							elm$svg$Svg$Attributes$cy('50'),
+							elm$svg$Svg$Attributes$r('10'),
+							elm$svg$Svg$Attributes$fill('blue'),
+							elm$svg$Svg$Attributes$stroke('none')
+						]),
+					_List_Nil),
+					A2(
+					elm$svg$Svg$circle,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$cx('850'),
+							elm$svg$Svg$Attributes$cy('50'),
+							elm$svg$Svg$Attributes$r('10'),
+							elm$svg$Svg$Attributes$fill('blue'),
+							elm$svg$Svg$Attributes$stroke('none')
+						]),
+					_List_Nil)
+				]);
 	}
 };
-var elm$core$Task$Perform = function (a) {
-	return {$: 'Perform', a: a};
-};
-var elm$core$Task$succeed = _Scheduler_succeed;
-var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
 		if (!ls.b) {
@@ -5001,6 +5016,118 @@ var elm$core$List$foldr = F3(
 	function (fn, acc, ls) {
 		return A4(elm$core$List$foldrHelper, fn, acc, 0, ls);
 	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$svg$Svg$rect = elm$svg$Svg$trustedNode('rect');
+var elm$svg$Svg$svg = elm$svg$Svg$trustedNode('svg');
+var elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var elm$svg$Svg$Attributes$rx = _VirtualDom_attribute('rx');
+var elm$svg$Svg$Attributes$ry = _VirtualDom_attribute('ry');
+var elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var author$project$MessagePipe$svgDie = function (number) {
+	return A2(
+		elm$svg$Svg$svg,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$width('1000'),
+				elm$svg$Svg$Attributes$height('100'),
+				elm$svg$Svg$Attributes$viewBox('0 0 1000 100'),
+				elm$svg$Svg$Attributes$fill('white'),
+				elm$svg$Svg$Attributes$stroke('black'),
+				elm$svg$Svg$Attributes$strokeWidth('3')
+			]),
+		A2(
+			elm$core$List$append,
+			_List_fromArray(
+				[
+					A2(
+					elm$svg$Svg$rect,
+					_List_fromArray(
+						[
+							elm$svg$Svg$Attributes$x('1'),
+							elm$svg$Svg$Attributes$y('1'),
+							elm$svg$Svg$Attributes$width('1000'),
+							elm$svg$Svg$Attributes$height('100'),
+							elm$svg$Svg$Attributes$rx('15'),
+							elm$svg$Svg$Attributes$ry('15')
+						]),
+					_List_Nil)
+				]),
+			author$project$MessagePipe$listOfSvgs(number)));
+};
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var author$project$Main$view = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$svg$Svg$Attributes$class('elm-svg')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('dice')
+					]),
+				_List_fromArray(
+					[
+						author$project$Main$text(model.hello)
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('logicgates')
+					]),
+				_List_Nil),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$svg$Svg$Attributes$class('fractals')
+					]),
+				_List_fromArray(
+					[
+						author$project$MessagePipe$svgDie(5)
+					]))
+			]));
+};
+var elm$browser$Browser$External = function (a) {
+	return {$: 'External', a: a};
+};
+var elm$browser$Browser$Internal = function (a) {
+	return {$: 'Internal', a: a};
+};
+var elm$browser$Browser$Dom$NotFound = function (a) {
+	return {$: 'NotFound', a: a};
+};
+var elm$core$Basics$never = function (_n0) {
+	never:
+	while (true) {
+		var nvr = _n0.a;
+		var $temp$_n0 = nvr;
+		_n0 = $temp$_n0;
+		continue never;
+	}
+};
+var elm$core$Task$Perform = function (a) {
+	return {$: 'Perform', a: a};
+};
+var elm$core$Task$succeed = _Scheduler_succeed;
+var elm$core$Task$init = elm$core$Task$succeed(_Utils_Tuple0);
 var elm$core$List$map = F2(
 	function (f, xs) {
 		return A3(

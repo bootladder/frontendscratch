@@ -8,6 +8,7 @@ import Json.Decode as Decode
 import Json.Encode exposing (Value)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import MessagePipe exposing (..)
 
 
 main =
@@ -26,7 +27,34 @@ type alias Model =
 
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint", Cmd.none )
+    ( Model "uninint", httpFetchMessages "steve" "aaron")
+
+-- HTTP Request  (Query for Books)
+
+
+httpFetchMessages : String -> String -> Cmd Msg
+httpFetchMessages sender destination =
+    Http.post
+        { body =
+            Http.jsonBody <|
+                Json.Encode.object
+                    [ ( "sender", Json.Encode.string sender )
+                    , ( "destination", Json.Encode.string destination )
+                    ]
+        , url = "http://localhost:9002/audiomessageapi/query"
+        , expect = Http.expectJson ReceivedQueryResults queryDecoder
+        }
+
+
+queryDecoder : Decode.Decoder (List MessageDescriptor)
+queryDecoder =
+    Decode.list <|
+        Decode.map5 MessageDescriptor
+            (Decode.at [ "title" ] Decode.string)
+            (Decode.at [ "authors" ] <| Decode.list Decode.string)
+            (Decode.at [ "publisher" ] Decode.string)
+            (Decode.at [ "imagelink" ] Decode.string)
+            (Decode.at [ "moreinfolink" ] Decode.string)
 
 
 
@@ -84,21 +112,21 @@ decodeValue x =
 
 
 
-        messageDescDecoder: Decoder MessageDesc
-        messageDescDecoder =
-            Decode.decodeValue (Decode.field "sender" Decode.string)
-            JD.map3 Person
-                (field "id" int)
-                (field "name" string)
-                (field "address" addressDecoder)
-
-        (somethingfromjson, error3) =
-            case Decode.decodeValue (Decode.list messageDescDecoder) x of
-                Ok i ->
-                    ( "huuur", False )
-
-                Err _ ->
-                    ( "duuur", True )
+--        messageDescDecoder: Decoder MessageDesc
+--        messageDescDecoder =
+--            Decode.decodeValue (Decode.field "sender" Decode.string)
+--            JD.map3 Person
+--                (field "id" int)
+--                (field "name" string)
+--                (field "address" addressDecoder)
+--
+--        (somethingfromjson, error3) =
+--            case Decode.decodeValue (Decode.list messageDescDecoder) x of
+--                Ok i ->
+--                    ( "huuur", False )
+--
+--                Err _ ->
+--                    ( "duuur", True )
 
 
     in
@@ -121,6 +149,7 @@ view model =
             ]
         , div [ class "fractals" ]
             [
+             svgDie 5
             ]
         ]
 

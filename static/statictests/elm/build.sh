@@ -1,1 +1,1 @@
-elm make Main.elm --output elmapp.js
+elm make src/Main.elm src/MessagePipe.elm --output elmapp.js
