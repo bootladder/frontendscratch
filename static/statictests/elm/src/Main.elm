@@ -27,8 +27,13 @@ type alias Model =
 
 type alias MessageDescriptor =
     { sender : String
+    , destination : String
     , color : String
+    , shape : String
     , label : String
+    , backgroundColor : String
+    , backgroundType : String
+    , status : String
     }
 
 
@@ -58,10 +63,15 @@ httpFetchMessages sender destination =
 queryDecoder : Decode.Decoder (List MessageDescriptor)
 queryDecoder =
     Decode.list <|
-        Decode.map3 MessageDescriptor
+        Decode.map8 MessageDescriptor
             (Decode.at [ "sender" ] Decode.string)
+            (Decode.at [ "destination" ] Decode.string)
             (Decode.at [ "color" ] Decode.string)
+            (Decode.at [ "shape" ] Decode.string)
             (Decode.at [ "label" ] Decode.string)
+            (Decode.at [ "backgroundColor" ] Decode.string)
+            (Decode.at [ "backgroundType" ] Decode.string)
+            (Decode.at [ "status" ] Decode.string)
 
 
 
@@ -95,9 +105,14 @@ view : Model -> Html Msg
 view model =
     let
         messageDesc =
-            { sender = "steve"
-            , color = "yellow"
-            , label = "Z"
+            { sender = "S"
+            , destination = "A"
+            , color = "green"
+            , shape = "circle"
+            , label = "L"
+            , backgroundColor = "gray"
+            , backgroundType = "solid"
+            , status = "OK"
             }
 
         messageDescriptors =
@@ -125,7 +140,13 @@ svgMessagePipe messageDescriptors =
             List.map2 Tuple.pair messageDescriptors x_offsets
     in
     svg
-        [ width "1000", height "100", viewBox "0 0 1000 100", fill "white", stroke "black", strokeWidth "3" ]
+        [ width "1000"
+        , height "100"
+        , viewBox "0 0 1000 100"
+        , fill "white"
+        , stroke "black"
+        , strokeWidth "3"
+        ]
         (List.concat
             [ [ svgPipe
               , svgSender
@@ -160,7 +181,13 @@ svgMessage x_offset messageDesc =
         , y "0"
         ]
         [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
-        , circle [ cx "50%", cy "50%", r "30%", fill "blue" ] []
+        , circle
+            [ cx "50%"
+            , cy "50%"
+            , r "30%"
+            , fill messageDesc.backgroundColor
+            ]
+            []
         , text_ [ x "40%", y "60%", fontSize "90" ] [ text messageDesc.label ]
         ]
 
@@ -188,10 +215,10 @@ text =
 path =
     Svg.path
 
+
 port selectedIndex : (Value -> msg) -> Sub msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.none
-
