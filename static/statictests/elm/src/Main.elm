@@ -10,6 +10,7 @@ import Json.Encode exposing (Value)
 import MessagePipe exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Svg.Events exposing (..)
 
 
 main =
@@ -130,7 +131,7 @@ view model =
         ]
 
 
-svgMessagePipe : List MessageDescriptor -> Html msg
+--svgMessagePipe : List MessageDescriptor -> Html msg
 svgMessagePipe messageDescriptors =
     let
         x_offsets =
@@ -140,8 +141,8 @@ svgMessagePipe messageDescriptors =
             List.map2 Tuple.pair messageDescriptors x_offsets
     in
     svg
-        [ width "1000"
-        , height "100"
+        [ width "500"
+        , height "80"
         , viewBox "0 0 1000 100"
         , fill "white"
         , stroke "black"
@@ -184,6 +185,7 @@ svgMessage x_offset messageDesc =
         , circle
             [ cx "50%"
             , cy "50%"
+            , Svg.Events.onClick <| Hello "svg clcked"
             , r "30%"
             , fill messageDesc.backgroundColor
             ]
