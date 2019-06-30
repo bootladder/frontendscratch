@@ -1,15 +1,15 @@
-port module Main exposing (Model, Msg(..), attribute, decodeValue, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, text, update, view)
+port module Main exposing (MessageDescriptor, Model, Msg(..), attribute, decodeValue, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view)
 
 import Browser
 import Html exposing (Attribute, Html, button, div, input, text)
 import Html.Attributes
 import Html.Events exposing (onClick, onInput)
+import Http
 import Json.Decode as Decode
 import Json.Encode exposing (Value)
 import MessagePipe exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Http
 
 
 main =
@@ -26,7 +26,9 @@ type alias Model =
 
 
 type alias MessageDescriptor =
-    { sender: String
+    { sender : String
+    , color : String
+    , label : String
     }
 
 
@@ -56,8 +58,10 @@ httpFetchMessages sender destination =
 queryDecoder : Decode.Decoder (List MessageDescriptor)
 queryDecoder =
     Decode.list <|
-        Decode.map MessageDescriptor
-            (Decode.at [ "title" ] Decode.string)
+        Decode.map3 MessageDescriptor
+            (Decode.at [ "sender" ] Decode.string)
+            (Decode.at [ "color" ] Decode.string)
+            (Decode.at [ "label" ] Decode.string)
 
 
 
@@ -79,7 +83,8 @@ update msg model =
         Hello str ->
             ( { model | hello = str }, Cmd.none )
 
-        ReceivedMessageDescriptors result -> ( model, Cmd.none )
+        ReceivedMessageDescriptors result ->
+            ( model, Cmd.none )
 
 
 port selectedIndex : (Value -> msg) -> Sub msg
@@ -143,7 +148,14 @@ decodeValue x =
 view : Model -> Html Msg
 view model =
     let
-        messageDesc ={ sender = "steve"}
+        messageDesc =
+            { sender = "steve"
+            , color = "yellow"
+            , label = "Z"
+            }
+
+        messageDescriptors =
+            [ messageDesc, messageDesc ]
     in
     div [ class "elm-svg" ]
         [ div [ class "dice" ]
@@ -152,14 +164,73 @@ view model =
         , div [ class "logicgates" ]
             []
         , div [ class "fractals" ]
-            [ svgDie 5
-            , svgMessagePipe messageDesc
+            [ svgMessagePipe messageDescriptors
             ]
         ]
 
-svgMessagePipe : MessageDescriptor -> Html msg
-svgMessagePipe messageDesc = div [] []
 
+svgMessagePipe : List MessageDescriptor -> Html msg
+svgMessagePipe messageDescriptors =
+    let
+        x_offsets =
+            List.map ((*) 10) (List.range 1 (List.length messageDescriptors))
+
+        desc_offset_tuples =
+            List.map2 Tuple.pair messageDescriptors x_offsets
+    in
+    svg
+        [ width "1000", height "100", viewBox "0 0 1000 100", fill "white", stroke "black", strokeWidth "3" ]
+        (List.concat
+            [ [ svgPipe
+              , svgSender
+              , svgDestination
+              ]
+            , List.foldl
+                (\desc_offset_tuple msgs ->
+                    let
+                        messageDesc = (Tuple.first desc_offset_tuple)
+
+                        x_offset =
+                            (String.fromInt <| Tuple.second desc_offset_tuple) ++ "%"
+                    in
+                    List.append msgs [ svgMessage x_offset messageDesc ]
+                )
+                []
+                desc_offset_tuples
+            ]
+        )
+
+
+svgMessage x_offset messageDesc =
+    svg
+        [ width "100"
+        , height "100%"
+        , viewBox "0 0 300 300"
+        , fill messageDesc.color
+        , stroke "black"
+        , strokeWidth "3"
+        , x x_offset
+        , y "0"
+        ]
+        [ svgPipe
+        , svgSender
+        , svgDestination
+        , rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
+        , circle [ cx "50%", cy "50%", r "30%", fill "blue" ] []
+        , text_ [ x "40%", y "60%", fontSize "90" ] [ text messageDesc.label ]
+        ]
+
+
+svgPipe =
+    rect [ x "1", y "1", width "1000", height "100", rx "15", ry "15" ] []
+
+
+svgSender =
+    circle [ cx "50", cy "50", r "10", fill "blue", stroke "none" ] []
+
+
+svgDestination =
+    circle [ cx "850", cy "50", r "10", fill "blue", stroke "none" ] []
 
 
 attribute =
