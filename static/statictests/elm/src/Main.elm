@@ -27,14 +27,14 @@ type alias Model =
 
 
 type alias MessageDescriptor =
-    { sender : String
+    { id : String
+    , sender : String
     , destination : String
     , color : String
     , shape : String
     , label : String
     , backgroundColor : String
     , backgroundType : String
-    , status : String
     }
 
 
@@ -65,6 +65,7 @@ queryDecoder : Decode.Decoder (List MessageDescriptor)
 queryDecoder =
     Decode.list <|
         Decode.map8 MessageDescriptor
+            (Decode.at [ "id" ] Decode.string)
             (Decode.at [ "sender" ] Decode.string)
             (Decode.at [ "destination" ] Decode.string)
             (Decode.at [ "color" ] Decode.string)
@@ -72,7 +73,6 @@ queryDecoder =
             (Decode.at [ "label" ] Decode.string)
             (Decode.at [ "backgroundColor" ] Decode.string)
             (Decode.at [ "backgroundType" ] Decode.string)
-            (Decode.at [ "status" ] Decode.string)
 
 
 
@@ -113,7 +113,6 @@ view model =
             , label = "L"
             , backgroundColor = "gray"
             , backgroundType = "solid"
-            , status = "OK"
             }
 
         messageDescriptors =
@@ -186,6 +185,8 @@ svgMessage x_offset messageDesc =
             [ cx "50%"
             , cy "50%"
             , Svg.Events.onClick <| Hello "svg clcked"
+            , Svg.Events.onMouseOver <| Hello "svg OVER"
+            , Svg.Events.onMouseOut <| Hello "svg OUT"
             , r "30%"
             , fill messageDesc.backgroundColor
             ]
