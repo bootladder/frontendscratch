@@ -1,4 +1,4 @@
-port module Main exposing (MessageDescriptor, Model, Msg(..), attribute, decodeValue, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view)
+port module Main exposing (MessageDescriptor, Model, Msg(..), attribute, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view)
 
 import Browser
 import Html exposing (Attribute, Html, button, div, input, text)
@@ -87,60 +87,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-port selectedIndex : (Value -> msg) -> Sub msg
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    selectedIndex decodeValue
-
-
-decodeValue : Value -> Msg
-decodeValue x =
-    let
-        ( index, error ) =
-            case Decode.decodeValue (Decode.field "hello" Decode.string) x of
-                Ok s ->
-                    ( s, False )
-
-                Err _ ->
-                    ( "bad", True )
-
-        ( decodedPercent, error1 ) =
-            case Decode.decodeValue (Decode.field "x" Decode.float) x of
-                Ok i ->
-                    ( i, False )
-
-                Err _ ->
-                    ( 0, True )
-
-        ( decodedY, error2 ) =
-            case Decode.decodeValue (Decode.field "y" Decode.float) x of
-                Ok i ->
-                    ( i, False )
-
-                Err _ ->
-                    ( 0, True )
-
-        --        messageDescDecoder: Decoder MessageDesc
-        --        messageDescDecoder =
-        --            Decode.decodeValue (Decode.field "sender" Decode.string)
-        --            JD.map3 Person
-        --                (field "id" int)
-        --                (field "name" string)
-        --                (field "address" addressDecoder)
-        --
-        --        (somethingfromjson, error3) =
-        --            case Decode.decodeValue (Decode.list messageDescDecoder) x of
-        --                Ok i ->
-        --                    ( "huuur", False )
-        --
-        --                Err _ ->
-        --                    ( "duuur", True )
-    in
-    Hello index
-
-
 
 -- VIEW
 
@@ -188,7 +134,8 @@ svgMessagePipe messageDescriptors =
             , List.foldl
                 (\desc_offset_tuple msgs ->
                     let
-                        messageDesc = (Tuple.first desc_offset_tuple)
+                        messageDesc =
+                            Tuple.first desc_offset_tuple
 
                         x_offset =
                             (String.fromInt <| Tuple.second desc_offset_tuple) ++ "%"
@@ -212,10 +159,7 @@ svgMessage x_offset messageDesc =
         , x x_offset
         , y "0"
         ]
-        [ svgPipe
-        , svgSender
-        , svgDestination
-        , rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
+        [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
         , circle [ cx "50%", cy "50%", r "30%", fill "blue" ] []
         , text_ [ x "40%", y "60%", fontSize "90" ] [ text messageDesc.label ]
         ]
@@ -243,3 +187,11 @@ text =
 
 path =
     Svg.path
+
+port selectedIndex : (Value -> msg) -> Sub msg
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
+
