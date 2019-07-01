@@ -156,7 +156,12 @@ responseModel2ViewModel responsemodel =
     { id = responsemodel.audioblobid
     , sender = responsemodel.sender
     , destination = responsemodel.destination
-    , color = "green"
+    , color =
+        if responsemodel.listenedto == False then
+            "green"
+
+        else
+            "gray"
     , shape = "circle"
     , label = responsemodel.topic
     , backgroundColor = "gray"
@@ -198,11 +203,19 @@ view model =
                 [ Html.Events.onClick <| UserSelectButtonClicked "user2" ]
                 [ text "User2" ]
             ]
-        , div [ class "elmmessagepipes" ]
-            [ svgMessagePipe model.user "aaron" <| filterMessagesFromUser "aaron" model.messageDescriptors
-            , svgMessagePipe model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
-            , svgMessagePipe model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
-            , svgMessagePipe model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
+        , svg
+            [ class "elmmessagepipes"
+            , width "500"
+            , height "500"
+            , viewBox "0 0 1000 1000"
+            , fill "white"
+            , stroke "black"
+            , strokeWidth "3"
+            ]
+            [ svgMessagePipe 0 model.user "aaron" <| filterMessagesFromUser "aaron" model.messageDescriptors
+            , svgMessagePipe 30 model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
+            , svgMessagePipe 60 model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
+            , svgMessagePipe 90 model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
             ]
         , div [ class "elmmessagemetadata" ]
             [ viewMessageMetadata model.selectedMessage
@@ -210,8 +223,8 @@ view model =
         ]
 
 
-svgMessagePipe : String -> String -> List MessageDescriptorViewModel -> Html Msg
-svgMessagePipe myname yourname messageDescriptors =
+svgMessagePipe : Int -> String -> String -> List MessageDescriptorViewModel -> Html Msg
+svgMessagePipe angle myname yourname messageDescriptors =
     svg
         [ width "500"
         , height "80"
@@ -219,6 +232,15 @@ svgMessagePipe myname yourname messageDescriptors =
         , fill "white"
         , stroke "black"
         , strokeWidth "3"
+        , x "0"
+        , y "0"
+        , transform <|
+            "translate( 90 "
+                ++ String.fromInt angle
+                ++ " )"
+                ++ "rotate( "
+                ++ String.fromInt angle
+                ++ " 0 0)"
         ]
         (List.concat
             [ [ svgPipe
@@ -251,7 +273,7 @@ svgMessage x_offset messageDesc =
         [ width "10%"
         , height "100%"
         , viewBox "0 0 300 300"
-        , fill messageDesc.color
+        , fill messageDesc.backgroundColor
         , stroke "black"
         , strokeWidth "3"
         , x x_offset
@@ -265,7 +287,7 @@ svgMessage x_offset messageDesc =
             , Svg.Events.onMouseOver <| MessageOrbHovered messageDesc
             , Svg.Events.onMouseOut <| Hello "svg OUT"
             , r "30%"
-            , fill messageDesc.backgroundColor
+            , fill messageDesc.color
             ]
             []
         , text_ [ x "40%", y "60%", fontSize "90" ] [ text messageDesc.label ]
