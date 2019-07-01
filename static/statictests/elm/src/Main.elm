@@ -78,7 +78,7 @@ httpFetchMessages username =
             Http.multipartBody
                 [ Http.stringPart "requestmodel" <| httpJsonString "steve"
                 ]
-        , url = "http://localhost:9002/audiomessageapi/query"
+        , url = "http://localhost:9002/audiomessageapi/queryusermessages"
         , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
         }
 

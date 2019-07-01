@@ -71,7 +71,7 @@ function messagepipe_init(divContainer,mynameparam,yournameparam) {
 
     // Load the Pipe immediately.
     // Where should this be?  Not readable
-    LoadPipe()
+//    LoadPipe()
 
     btnLoadA.onclick = function() {
         LoadPipe()

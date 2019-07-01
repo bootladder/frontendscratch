@@ -11,7 +11,6 @@ $(document).ready( function() {
     dynamicallyLoadScript("button-upload-recording.js");
     dynamicallyLoadScript("ajax.js");
     dynamicallyLoadScript("button-test.js");
-    dynamicallyLoadScript("elmpipe.js");
 
 
     $("#testmessagepipe")
