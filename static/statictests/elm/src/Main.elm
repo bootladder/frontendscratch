@@ -1,4 +1,4 @@
-port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), attribute, httpFetchMessages, httpJsonString, init, main, messageDescriptorResponseModelDecoder, messageOrbs, path, queryDecoder, responseModel2ViewModel, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, testMessageDesc, testMessageDesc2, testMessageDescriptors, text, update, view)
+port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), attribute, httpFetchMessages, httpJsonString, init, main, messageDescriptorResponseModelDecoder, messageOrbs, path, playbackMessage, queryDecoder, responseModel2ViewModel, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view, viewMessageMetadata)
 
 import Basics.Extra exposing (..)
 import Browser
@@ -26,6 +26,7 @@ main =
 type alias Model =
     { hello : String
     , messageDescriptors : List MessageDescriptorViewModel
+    , selectedMessage : Maybe MessageDescriptorViewModel
     }
 
 
@@ -55,28 +56,27 @@ type alias MessageDescriptorViewModel =
 
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint" [], httpFetchMessages "steve" "aaron" )
+    ( Model "uninint" [] Nothing, httpFetchMessages "steve" )
 
 
 
 -- HTTP Request  (Query for Books)
 
 
-httpJsonString : String -> String -> String
-httpJsonString sender destination =
+httpJsonString : String -> String
+httpJsonString username =
     Json.Encode.encode 0 <|
         Json.Encode.object
-            [ ( "sender", Json.Encode.string sender )
-            , ( "destination", Json.Encode.string destination )
+            [ ( "username", Json.Encode.string username )
             ]
 
 
-httpFetchMessages : String -> String -> Cmd Msg
-httpFetchMessages sender destination =
+httpFetchMessages : String -> Cmd Msg
+httpFetchMessages username =
     Http.post
         { body =
             Http.multipartBody
-                [ Http.stringPart "requestmodel" <| httpJsonString "steve" "aaron"
+                [ Http.stringPart "requestmodel" <| httpJsonString "steve"
                 ]
         , url = "http://localhost:9002/audiomessageapi/query"
         , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
@@ -110,6 +110,8 @@ type Msg
     | Hello String
     | ReceivedMessageDescriptorResponseModel (Result Http.Error (List MessageDescriptorResponseModel))
     | MessageOrbHovered MessageDescriptorViewModel
+    | OrbClicked MessageDescriptorViewModel
+    | UserSelectButtonClicked String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -141,6 +143,12 @@ update msg model =
         MessageOrbHovered messageDesc ->
             ( { model | hello = "blah" }, Cmd.none )
 
+        OrbClicked messageDesc ->
+            ( { model | selectedMessage = Just messageDesc }, playbackMessage 8 )
+
+        UserSelectButtonClicked user ->
+            ( model, httpFetchMessages "steve" )
+
 
 responseModel2ViewModel : MessageDescriptorResponseModel -> MessageDescriptorViewModel
 responseModel2ViewModel _ =
@@ -157,35 +165,6 @@ responseModel2ViewModel _ =
 
 
 -- VIEW
--- FOR TESTING
-
-
-testMessageDesc =
-    { id = "100"
-    , sender = "S"
-    , destination = "A"
-    , color = "green"
-    , shape = "circle"
-    , label = "L"
-    , backgroundColor = "gray"
-    , backgroundType = "solid"
-    }
-
-
-testMessageDesc2 =
-    { id = "100"
-    , sender = "S"
-    , destination = "A"
-    , color = "blue"
-    , shape = "circle"
-    , label = "X"
-    , backgroundColor = "yellow"
-    , backgroundType = "solid"
-    }
-
-
-testMessageDescriptors =
-    [ testMessageDesc, testMessageDesc2 ]
 
 
 view : Model -> Html Msg
@@ -194,11 +173,26 @@ view model =
         [ div [ class "dice" ]
             [ text model.hello
             ]
-        , div [ class "logicgates" ]
-            []
-        , div [ class "fractals" ]
+        , div [ class "elmuserlogin" ]
+            [ text "Who are you?"
+            , button
+                [ Html.Events.onClick <| UserSelectButtonClicked "steve" ]
+                [ text "Steve" ]
+            , button
+                [ Html.Events.onClick <| UserSelectButtonClicked "aaron" ]
+                [ text "Aaron" ]
+            , button
+                [ Html.Events.onClick <| UserSelectButtonClicked "user1" ]
+                [ text "User1" ]
+            , button
+                [ Html.Events.onClick <| UserSelectButtonClicked "user2" ]
+                [ text "User2" ]
+            ]
+        , div [ class "elmmessagepipes" ]
             [ svgMessagePipe model.messageDescriptors
-            , svgMessagePipe testMessageDescriptors
+            ]
+        , div [ class "elmmessagemetadata" ]
+            [ viewMessageMetadata model.selectedMessage
             ]
         ]
 
@@ -254,7 +248,7 @@ svgMessage x_offset messageDesc =
         , circle
             [ cx "50%"
             , cy "50%"
-            , Svg.Events.onClick <| Hello "svg clcked"
+            , Svg.Events.onClick <| OrbClicked messageDesc
             , Svg.Events.onMouseOver <| MessageOrbHovered messageDesc
             , Svg.Events.onMouseOut <| Hello "svg OUT"
             , r "30%"
@@ -321,6 +315,22 @@ svgDestination name =
         ]
 
 
+viewMessageMetadata : Maybe MessageDescriptorViewModel -> Html Msg
+viewMessageMetadata maybemessage =
+    case maybemessage of
+        Just message ->
+            div []
+                [ text message.sender
+                , text message.destination
+                , text message.color
+                , text message.label
+                , text "REPLY WITH SAME PARAMS BUTTON"
+                ]
+
+        Nothing ->
+            div [] [ text "nothing" ]
+
+
 attribute =
     Html.Attributes.attribute
 
@@ -334,6 +344,9 @@ path =
 
 
 port selectedIndex : (Value -> msg) -> Sub msg
+
+
+port playbackMessage : Int -> Cmd a
 
 
 subscriptions : Model -> Sub Msg

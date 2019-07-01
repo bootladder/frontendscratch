@@ -9,6 +9,21 @@
              flags: 77
          });
 
+         app.ports.playbackMessage.subscribe(id => {
+             elm_playbackMessage("audiomessage_1561945366910");
+         });
+
+
+
+         function elm_playbackMessage(id) {
+             console.log("elmplaybackmessage" + id)
+             var audio = document.getElementById('audio-playback') || new Audio();
+             audio.src= audioserverurl+"/audiomessagedownload/" + id;
+             audio.load()
+
+             window.location.href='#divAudioPlayback'
+         }
+
          function elm_send_port(obj){
 
              obj = {
