@@ -1,11 +1,13 @@
-port module Main exposing (MessageDescriptor, Model, Msg(..), attribute, httpFetchMessages, init, main, path, queryDecoder, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view)
+port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), attribute, httpFetchMessages, httpJsonString, init, main, messageDescriptorResponseModelDecoder, messageOrbs, path, queryDecoder, responseModel2ViewModel, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, testMessageDesc, testMessageDesc2, testMessageDescriptors, text, update, view)
 
+import Basics.Extra exposing (..)
 import Browser
 import Html exposing (Attribute, Html, button, div, input, text)
 import Html.Attributes
 import Html.Events exposing (onClick, onInput)
 import Http
-import Json.Decode as Decode
+import Json.Decode as Decode exposing (..)
+import Json.Decode.Pipeline as D
 import Json.Encode exposing (Value)
 import MessagePipe exposing (..)
 import Svg exposing (..)
@@ -23,10 +25,23 @@ main =
 
 type alias Model =
     { hello : String
+    , messageDescriptors : List MessageDescriptorViewModel
     }
 
 
-type alias MessageDescriptor =
+type alias MessageDescriptorResponseModel =
+    { id : String
+    , customtopic : String
+    , project : String
+    , timestamp : Int
+    , sender : String
+    , destination : String
+    , audioblobid : String
+    , listenedto : Bool
+    }
+
+
+type alias MessageDescriptorViewModel =
     { id : String
     , sender : String
     , destination : String
@@ -40,39 +55,50 @@ type alias MessageDescriptor =
 
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint", httpFetchMessages "steve" "aaron" )
+    ( Model "uninint" [], httpFetchMessages "steve" "aaron" )
 
 
 
 -- HTTP Request  (Query for Books)
 
 
+httpJsonString : String -> String -> String
+httpJsonString sender destination =
+    Json.Encode.encode 0 <|
+        Json.Encode.object
+            [ ( "sender", Json.Encode.string sender )
+            , ( "destination", Json.Encode.string destination )
+            ]
+
+
 httpFetchMessages : String -> String -> Cmd Msg
 httpFetchMessages sender destination =
     Http.post
         { body =
-            Http.jsonBody <|
-                Json.Encode.object
-                    [ ( "sender", Json.Encode.string sender )
-                    , ( "destination", Json.Encode.string destination )
-                    ]
+            Http.multipartBody
+                [ Http.stringPart "requestmodel" <| httpJsonString "steve" "aaron"
+                ]
         , url = "http://localhost:9002/audiomessageapi/query"
-        , expect = Http.expectJson ReceivedMessageDescriptors queryDecoder
+        , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
         }
 
 
-queryDecoder : Decode.Decoder (List MessageDescriptor)
+queryDecoder : Decode.Decoder (List MessageDescriptorResponseModel)
 queryDecoder =
-    Decode.list <|
-        Decode.map8 MessageDescriptor
-            (Decode.at [ "id" ] Decode.string)
-            (Decode.at [ "sender" ] Decode.string)
-            (Decode.at [ "destination" ] Decode.string)
-            (Decode.at [ "color" ] Decode.string)
-            (Decode.at [ "shape" ] Decode.string)
-            (Decode.at [ "label" ] Decode.string)
-            (Decode.at [ "backgroundColor" ] Decode.string)
-            (Decode.at [ "backgroundType" ] Decode.string)
+    Decode.list <| messageDescriptorResponseModelDecoder
+
+
+messageDescriptorResponseModelDecoder : Decode.Decoder MessageDescriptorResponseModel
+messageDescriptorResponseModelDecoder =
+    succeed MessageDescriptorResponseModel
+        |> D.optional "ID" Decode.string "haha"
+        |> D.optional "customtopic" Decode.string "undef"
+        |> D.optional "project" Decode.string "undef"
+        |> D.optional "timestamp" Decode.int 999
+        |> D.optional "sender" Decode.string "undef"
+        |> D.optional "destination" Decode.string "undef"
+        |> D.optional "audioblobid" Decode.string "undef"
+        |> D.optional "listenedto" Decode.bool False
 
 
 
@@ -82,7 +108,8 @@ queryDecoder =
 type Msg
     = Noop
     | Hello String
-    | ReceivedMessageDescriptors (Result Http.Error (List MessageDescriptor))
+    | ReceivedMessageDescriptorResponseModel (Result Http.Error (List MessageDescriptorResponseModel))
+    | MessageOrbHovered MessageDescriptorViewModel
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -94,30 +121,75 @@ update msg model =
         Hello str ->
             ( { model | hello = str }, Cmd.none )
 
-        ReceivedMessageDescriptors result ->
-            ( model, Cmd.none )
+        ReceivedMessageDescriptorResponseModel (Ok descriptors) ->
+            let
+                messageDescriptorViewModels =
+                    List.map responseModel2ViewModel descriptors
+            in
+            ( { model | messageDescriptors = messageDescriptorViewModels }, Cmd.none )
+
+        ReceivedMessageDescriptorResponseModel (Err (Http.BadBody s)) ->
+            ( { model | hello = s }
+            , Cmd.none
+            )
+
+        ReceivedMessageDescriptorResponseModel (Err _) ->
+            ( { model | hello = "FAIL" }
+            , Cmd.none
+            )
+
+        MessageOrbHovered messageDesc ->
+            ( { model | hello = "blah" }, Cmd.none )
+
+
+responseModel2ViewModel : MessageDescriptorResponseModel -> MessageDescriptorViewModel
+responseModel2ViewModel _ =
+    { id = "100"
+    , sender = "S"
+    , destination = "A"
+    , color = "green"
+    , shape = "circle"
+    , label = "L"
+    , backgroundColor = "gray"
+    , backgroundType = "solid"
+    }
 
 
 
 -- VIEW
+-- FOR TESTING
+
+
+testMessageDesc =
+    { id = "100"
+    , sender = "S"
+    , destination = "A"
+    , color = "green"
+    , shape = "circle"
+    , label = "L"
+    , backgroundColor = "gray"
+    , backgroundType = "solid"
+    }
+
+
+testMessageDesc2 =
+    { id = "100"
+    , sender = "S"
+    , destination = "A"
+    , color = "blue"
+    , shape = "circle"
+    , label = "X"
+    , backgroundColor = "yellow"
+    , backgroundType = "solid"
+    }
+
+
+testMessageDescriptors =
+    [ testMessageDesc, testMessageDesc2 ]
 
 
 view : Model -> Html Msg
 view model =
-    let
-        messageDesc =
-            { sender = "S"
-            , destination = "A"
-            , color = "green"
-            , shape = "circle"
-            , label = "L"
-            , backgroundColor = "gray"
-            , backgroundType = "solid"
-            }
-
-        messageDescriptors =
-            [ messageDesc, messageDesc ]
-    in
     div [ class "elm-svg" ]
         [ div [ class "dice" ]
             [ text model.hello
@@ -125,20 +197,14 @@ view model =
         , div [ class "logicgates" ]
             []
         , div [ class "fractals" ]
-            [ svgMessagePipe messageDescriptors
+            [ svgMessagePipe model.messageDescriptors
+            , svgMessagePipe testMessageDescriptors
             ]
         ]
 
 
---svgMessagePipe : List MessageDescriptor -> Html msg
+svgMessagePipe : List MessageDescriptorViewModel -> Html Msg
 svgMessagePipe messageDescriptors =
-    let
-        x_offsets =
-            List.map ((*) 10) (List.range 1 (List.length messageDescriptors))
-
-        desc_offset_tuples =
-            List.map2 Tuple.pair messageDescriptors x_offsets
-    in
     svg
         [ width "500"
         , height "80"
@@ -149,29 +215,33 @@ svgMessagePipe messageDescriptors =
         ]
         (List.concat
             [ [ svgPipe
-              , svgSender
-              , svgDestination
+              , svgSender "Steve"
+              , svgDestination "Aaron"
               ]
-            , List.foldl
-                (\desc_offset_tuple msgs ->
-                    let
-                        messageDesc =
-                            Tuple.first desc_offset_tuple
-
-                        x_offset =
-                            (String.fromInt <| Tuple.second desc_offset_tuple) ++ "%"
-                    in
-                    List.append msgs [ svgMessage x_offset messageDesc ]
-                )
-                []
-                desc_offset_tuples
+            , messageOrbs messageDescriptors
             ]
         )
 
 
+messageOrbs : List MessageDescriptorViewModel -> List (Html Msg)
+messageOrbs messageDescriptors =
+    -- Pair the messageDescriptors with x_offsets
+    let
+        times10percent x =
+            String.fromInt (x * 10) ++ "%"
+
+        x_offsets =
+            List.indexedMap (\index x -> times10percent (index + 2)) messageDescriptors
+
+        desc_offset_tuples =
+            List.map2 Tuple.pair x_offsets messageDescriptors
+    in
+    List.map (uncurry svgMessage) desc_offset_tuples
+
+
 svgMessage x_offset messageDesc =
     svg
-        [ width "100"
+        [ width "10%"
         , height "100%"
         , viewBox "0 0 300 300"
         , fill messageDesc.color
@@ -185,7 +255,7 @@ svgMessage x_offset messageDesc =
             [ cx "50%"
             , cy "50%"
             , Svg.Events.onClick <| Hello "svg clcked"
-            , Svg.Events.onMouseOver <| Hello "svg OVER"
+            , Svg.Events.onMouseOver <| MessageOrbHovered messageDesc
             , Svg.Events.onMouseOut <| Hello "svg OUT"
             , r "30%"
             , fill messageDesc.backgroundColor
@@ -199,12 +269,56 @@ svgPipe =
     rect [ x "1", y "1", width "1000", height "100", rx "15", ry "15" ] []
 
 
-svgSender =
-    circle [ cx "50", cy "50", r "10", fill "blue", stroke "none" ] []
+svgSender name =
+    svg
+        [ width "20%"
+        , height "100%"
+        , viewBox "0 0 300 300"
+        , fill "gray"
+        , stroke "black"
+        , strokeWidth "3"
+        , x "0"
+        , y "0"
+        ]
+        [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
+        , circle
+            [ cx "50%"
+            , cy "50%"
+            , Svg.Events.onClick <| Hello "svg clcked"
+            , Svg.Events.onMouseOver <| Hello "svg OVER"
+            , Svg.Events.onMouseOut <| Hello "svg OUT"
+            , r "30%"
+            , fill "brown"
+            ]
+            []
+        , text_ [ x "40%", y "60%", fontSize "90" ] [ text name ]
+        ]
 
 
-svgDestination =
-    circle [ cx "850", cy "50", r "10", fill "blue", stroke "none" ] []
+svgDestination name =
+    svg
+        [ width "20%"
+        , height "100%"
+        , viewBox "0 0 300 300"
+        , fill "gray"
+        , stroke "black"
+        , strokeWidth "3"
+        , x "80%"
+        , y "0"
+        ]
+        [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
+        , circle
+            [ cx "50%"
+            , cy "50%"
+            , Svg.Events.onClick <| Hello "svg clcked"
+            , Svg.Events.onMouseOver <| Hello "svg OVER"
+            , Svg.Events.onMouseOut <| Hello "svg OUT"
+            , r "30%"
+            , fill "brown"
+            ]
+            []
+        , text_ [ x "40%", y "60%", fontSize "90" ] [ text name ]
+        ]
 
 
 attribute =
