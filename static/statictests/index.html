@@ -9,21 +9,20 @@
              flags: 77
          });
 
-         //obj = {
-         //    hello: " yeaerr hello!"
-         //}
-         //app.ports.selectedIndex.send(obj)
          function elm_send_port(obj){
 
+             obj = {
+                 hello: " yeaerr hello!"
+             }
              app.ports.selectedIndex.send(obj)
          }
         </script>
     </p>
 </div>
 
-<div class="jumbotron">
+<div class="">
   <hr>
-  <h2>Audio Message Recording</h2>
+  <h3>Recording</h3>
 
   <div class="row">
     <div class="col-sm-4">
@@ -35,6 +34,18 @@
     </div>
   </div>
 </div>
+
+<div class="">
+    <hr>
+    <h3>Playback</h3>
+
+    <div class="row">
+        <div class="col">
+            <audio id="audio-playback" controls autoplay></audio>
+        </div>
+    </div>
+</div>
+
 
 <div class="jumbotron">
   <hr>
@@ -88,17 +99,6 @@
       <button id="btn-process-recording">Process (Upload) Recording</button>
     </div> 
   </div> 
-</div>
-
-<div class="jumbotron">
-  <hr>
-  <h2>Audio Message Playback</h2>
-
-  <div class="row">
-    <div class="col">
-      <audio id="audio-playback" controls autoplay></audio>
-    </div>
-  </div>
 </div>
 
 <div class="row">
