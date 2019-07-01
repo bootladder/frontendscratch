@@ -1,4 +1,4 @@
-port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), attribute, httpFetchMessages, httpJsonString, init, main, messageDescriptorResponseModelDecoder, messageOrbs, path, playbackMessage, queryDecoder, responseModel2ViewModel, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view, viewMessageMetadata)
+port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), attribute, filterMessagesFromUser, httpFetchMessages, httpJsonString, init, main, messageDescriptorResponseModelDecoder, messageOrbs, path, playbackMessage, queryDecoder, responseModel2ViewModel, selectedIndex, subscriptions, svgDestination, svgMessage, svgMessagePipe, svgPipe, svgSender, text, update, view, viewMessageMetadata)
 
 import Basics.Extra exposing (..)
 import Browser
@@ -27,12 +27,13 @@ type alias Model =
     { hello : String
     , messageDescriptors : List MessageDescriptorViewModel
     , selectedMessage : Maybe MessageDescriptorViewModel
+    , user : String
     }
 
 
 type alias MessageDescriptorResponseModel =
     { id : String
-    , customtopic : String
+    , topic : String
     , project : String
     , timestamp : Int
     , sender : String
@@ -56,7 +57,7 @@ type alias MessageDescriptorViewModel =
 
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint" [] Nothing, httpFetchMessages "steve" )
+    ( Model "uninint" [] Nothing "steve", httpFetchMessages "steve" )
 
 
 
@@ -76,7 +77,7 @@ httpFetchMessages username =
     Http.post
         { body =
             Http.multipartBody
-                [ Http.stringPart "requestmodel" <| httpJsonString "steve"
+                [ Http.stringPart "requestmodel" <| httpJsonString username
                 ]
         , url = "http://localhost:9002/audiomessageapi/queryusermessages"
         , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
@@ -92,7 +93,7 @@ messageDescriptorResponseModelDecoder : Decode.Decoder MessageDescriptorResponse
 messageDescriptorResponseModelDecoder =
     succeed MessageDescriptorResponseModel
         |> D.optional "ID" Decode.string "haha"
-        |> D.optional "customtopic" Decode.string "undef"
+        |> D.optional "topic" Decode.string "undef"
         |> D.optional "project" Decode.string "undef"
         |> D.optional "timestamp" Decode.int 999
         |> D.optional "sender" Decode.string "undef"
@@ -147,20 +148,29 @@ update msg model =
             ( { model | selectedMessage = Just messageDesc }, playbackMessage 8 )
 
         UserSelectButtonClicked user ->
-            ( model, httpFetchMessages "steve" )
+            ( { model | user = user }, httpFetchMessages user )
 
 
 responseModel2ViewModel : MessageDescriptorResponseModel -> MessageDescriptorViewModel
-responseModel2ViewModel _ =
-    { id = "100"
-    , sender = "S"
-    , destination = "A"
+responseModel2ViewModel responsemodel =
+    { id = responsemodel.audioblobid
+    , sender = responsemodel.sender
+    , destination = responsemodel.destination
     , color = "green"
     , shape = "circle"
-    , label = "L"
+    , label = responsemodel.topic
     , backgroundColor = "gray"
     , backgroundType = "solid"
     }
+
+
+
+-- VIEW HELPERS
+
+
+filterMessagesFromUser : String -> List MessageDescriptorViewModel -> List MessageDescriptorViewModel
+filterMessagesFromUser dest messages =
+    List.filter (\message -> message.sender == dest) messages
 
 
 
@@ -189,7 +199,10 @@ view model =
                 [ text "User2" ]
             ]
         , div [ class "elmmessagepipes" ]
-            [ svgMessagePipe model.messageDescriptors
+            [ svgMessagePipe model.user "aaron" <| filterMessagesFromUser "aaron" model.messageDescriptors
+            , svgMessagePipe model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
+            , svgMessagePipe model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
+            , svgMessagePipe model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
             ]
         , div [ class "elmmessagemetadata" ]
             [ viewMessageMetadata model.selectedMessage
@@ -197,8 +210,8 @@ view model =
         ]
 
 
-svgMessagePipe : List MessageDescriptorViewModel -> Html Msg
-svgMessagePipe messageDescriptors =
+svgMessagePipe : String -> String -> List MessageDescriptorViewModel -> Html Msg
+svgMessagePipe myname yourname messageDescriptors =
     svg
         [ width "500"
         , height "80"
@@ -209,8 +222,8 @@ svgMessagePipe messageDescriptors =
         ]
         (List.concat
             [ [ svgPipe
-              , svgSender "Steve"
-              , svgDestination "Aaron"
+              , svgSender myname
+              , svgDestination yourname
               ]
             , messageOrbs messageDescriptors
             ]
