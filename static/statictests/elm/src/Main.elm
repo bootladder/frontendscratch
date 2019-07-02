@@ -102,6 +102,27 @@ messageDescriptorResponseModelDecoder =
         |> D.optional "listenedto" Decode.bool False
 
 
+updateJsonBody : String -> String
+updateJsonBody id =
+    Json.Encode.encode 0 <|
+        Json.Encode.object
+            [ ( "audioblobid", Json.Encode.string id )
+            , ( "listenedto", Json.Encode.bool True )
+            ]
+
+
+updateMessageDescriptorListenedToState : String -> Cmd Msg
+updateMessageDescriptorListenedToState id =
+    Http.post
+        { body =
+            Http.multipartBody
+                [ Http.stringPart "requestmodel" <| updateJsonBody id
+                ]
+        , url = "http://localhost:9002/audiomessageapi/update"
+        , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
+        }
+
+
 
 -- UPDATE
 
@@ -145,7 +166,13 @@ update msg model =
             ( { model | hello = "blah" }, Cmd.none )
 
         OrbClicked messageDesc ->
-            ( { model | selectedMessage = Just messageDesc }, playbackMessage 8 )
+            ( { model | selectedMessage = Just messageDesc }
+            , Cmd.batch
+                [ playbackMessage messageDesc.id
+                , updateMessageDescriptorListenedToState messageDesc.id
+                , httpFetchMessages "steve"
+                ]
+            )
 
         UserSelectButtonClicked user ->
             ( { model | user = user }, httpFetchMessages user )
@@ -381,7 +408,7 @@ path =
 port selectedIndex : (Value -> msg) -> Sub msg
 
 
-port playbackMessage : Int -> Cmd a
+port playbackMessage : String -> Cmd a
 
 
 subscriptions : Model -> Sub Msg
