@@ -119,7 +119,7 @@ updateMessageDescriptorListenedToState id =
                 [ Http.stringPart "requestmodel" <| updateJsonBody id
                 ]
         , url = "http://localhost:9002/audiomessageapi/update"
-        , expect = Http.expectJson ReceivedMessageDescriptorResponseModel queryDecoder
+        , expect = Http.expectWhatever ReceivedUpdateResponse
         }
 
 
@@ -131,6 +131,7 @@ type Msg
     = Noop
     | Hello String
     | ReceivedMessageDescriptorResponseModel (Result Http.Error (List MessageDescriptorResponseModel))
+    | ReceivedUpdateResponse (Result Http.Error ())
     | MessageOrbHovered MessageDescriptorViewModel
     | OrbClicked MessageDescriptorViewModel
     | UserSelectButtonClicked String
@@ -144,6 +145,14 @@ update msg model =
 
         Hello str ->
             ( { model | hello = str }, Cmd.none )
+
+        ReceivedUpdateResponse (Ok _) ->
+            ( model, httpFetchMessages "steve" )
+
+        ReceivedUpdateResponse (Err _) ->
+            ( { model | hello = "FAIL" }
+            , Cmd.none
+            )
 
         ReceivedMessageDescriptorResponseModel (Ok descriptors) ->
             let
@@ -170,7 +179,6 @@ update msg model =
             , Cmd.batch
                 [ playbackMessage messageDesc.id
                 , updateMessageDescriptorListenedToState messageDesc.id
-                , httpFetchMessages "steve"
                 ]
             )
 
@@ -317,7 +325,13 @@ svgMessage x_offset messageDesc =
             , fill messageDesc.color
             ]
             []
-        , text_ [ x "40%", y "60%", fontSize "90" ] [ text messageDesc.label ]
+        , text_
+            [ x "40%"
+            , y "60%"
+            , fontSize "90"
+            , Svg.Events.onClick <| OrbClicked messageDesc
+            ]
+            [ text messageDesc.label ]
         ]
 
 
