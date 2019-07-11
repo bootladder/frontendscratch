@@ -277,16 +277,22 @@ view model =
                 [ text "User2" ]
             ]
         , svg
+            [ width "500"
+            , height "500"
+            ]
+            [ boundingRectangle
+            , svgMessagePipe 0 "A" "Z" [ testMessageDesc, testMessageDesc ]
+            ]
+        , svg
             [ class "elmmessagepipes"
             , width "500" --is actually 500px
             , height "500"
-            , viewBox "0 0 1000 1000"
             ]
             [ boundingRectangle
             , svgMessagePipe 0 model.user "aaron" <| filterMessagesFromUser "aaron" model.messageDescriptors
-            , svgMessagePipe 30 model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
-            , svgMessagePipe 60 model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
-            , svgMessagePipe 90 model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
+            , svgMessagePipe 25 model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
+            , svgMessagePipe 50 model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
+            , svgMessagePipe 75 model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
             , svgCenterOrb model.user
             , viewMessageMetadata model.selectedMessage
             ]
@@ -296,28 +302,22 @@ view model =
 svgMessagePipe : Int -> String -> String -> List MessageDescriptorViewModel -> Html Msg
 svgMessagePipe angle myname yourname messageDescriptors =
     svg
-        [ width "500" -- is actually 250px due to the parent 1000 viewBox
-        , height "80"
-        , viewBox "0 0 1000 100"
+        [ width "80%"
+        , height "15%"
         , fill "white"
         , stroke "black"
         , strokeWidth "3"
-        , x "0"
-        , y "0"
-        , transform <|
-            "translate( 90 "
-                ++ String.fromInt angle
-                ++ " )"
-                ++ "rotate( "
-                ++ String.fromInt angle
-                ++ " 0 0)"
+
+           , transform <|
+                   "rotate( "
+                   ++ String.fromInt angle
+                   ++ " 0 0)"
         ]
         (List.concat
-            [ [ svgPipe
+            [ [ svgPipe messageDescriptors
               , svgSender myname
               , svgDestination yourname
               ]
-            , messageOrbs messageDescriptors
             ]
         )
 
@@ -338,12 +338,11 @@ messageOrbs messageDescriptors =
     List.map (uncurry svgOrb) desc_offset_tuples
 
 
+svgOrb : String -> MessageDescriptorViewModel -> Html Msg
 svgOrb x_offset messageDesc =
     svg
         [ width "10%"
         , height "100%"
-
-        --     , viewBox "0 0 300 300"
         , fill messageDesc.backgroundColor
         , stroke "black"
         , strokeWidth "3"
@@ -364,7 +363,7 @@ svgOrb x_offset messageDesc =
         , text_
             [ x "40%"
             , y "60%"
-            , fontSize "2em"
+            , fontSize "1em"
 
             --, Svg.Events.onClick <| OrbClicked messageDesc
             ]
@@ -372,10 +371,28 @@ svgOrb x_offset messageDesc =
         ]
 
 
-svgPipe =
-    rect [ class "svgPipe", width "100%", height "100%" ] []
+svgPipe : List MessageDescriptorViewModel -> Svg Msg
+svgPipe messages =
+    svg
+        [ width "100%"
+        , height "40%"
+        , y "30%"
+        ]
+        (List.concat
+            [
+                 [ rect
+                    [ class "svgPipe"
+                    , width "100%"
+                    , height "100%"
+                    ]
+                    []
+              ]
+             ,messageOrbs messages
+            ]
+        )
 
 
+svgCenterOrb : String -> Svg Msg
 svgCenterOrb name =
     svg
         []
@@ -396,7 +413,6 @@ svgSender name =
     svg
         [ width "20%"
         , height "100%"
-        , viewBox "0 0 300 300"
         , fill "gray"
         , stroke "black"
         , strokeWidth "3"
@@ -414,15 +430,14 @@ svgSender name =
             , fill "brown"
             ]
             []
-        , text_ [ x "40%", y "60%", fontSize "90" ] [ text name ]
+        , text_ [ x "40%", y "60%", fontSize "1em" ] [ text name ]
         ]
 
 
 svgDestination name =
     svg
         [ width "20%"
-        , height "200%"
-        , viewBox "0 0 300 300"
+        , height "100%"
         , fill "gray"
         , stroke "black"
         , strokeWidth "3"
@@ -440,7 +455,7 @@ svgDestination name =
             , fill "brown"
             ]
             []
-        , text_ [ x "40%", y "60%", fontSize "90" ] [ text name ]
+        , text_ [ x "40%", y "60%", fontSize "1em" ] [ text name ]
         , boundingRectangle
         ]
 
@@ -512,8 +527,6 @@ metadataButton textParam message cmd =
         , fill "white"
         , class "metadatabutton"
         , Svg.Events.onClick <| cmd message
-
-        --, stroke "black"
         , strokeWidth "3"
         , x "0%"
         , y "0"
@@ -534,9 +547,9 @@ boundingRectangle =
     svg
         [ fill "white"
         , strokeWidth "5"
-        , stroke "black"
+        , stroke "green"
         ]
-        [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] [] ]
+        [ rect [ x "0", y "0", width "100%", height "100%" ] [] ]
 
 
 
@@ -563,6 +576,10 @@ pixelRuler =
         , pixelRulerLength "200px"
         , pixelRulerLength "500px"
         ]
+
+
+testMessageDesc =
+    MessageDescriptorViewModel "id" "topic " "project " "timestamp" "S " "D " "audioblobid " "listenedto "
 
 
 text =
