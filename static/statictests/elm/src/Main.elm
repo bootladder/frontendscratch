@@ -155,6 +155,7 @@ type Msg
     | ArchiveButtonClicked MessageDescriptorViewModel
     | DeleteButtonClicked MessageDescriptorViewModel
     | ReceivedDeleteResponse (Result Http.Error ())
+    | YouButtonClicked String -- User
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -222,6 +223,9 @@ update msg model =
         ArchiveButtonClicked messageDesc ->
             ( { model | hello = "archive clicked" }, Cmd.none )
 
+        YouButtonClicked username ->
+            ( model, Cmd.none )
+
 
 responseModel2ViewModel : MessageDescriptorResponseModel -> MessageDescriptorViewModel
 responseModel2ViewModel responsemodel =
@@ -277,13 +281,6 @@ view model =
                 [ text "User2" ]
             ]
         , svg
-            [ width "500"
-            , height "500"
-            ]
-            [ boundingRectangle
-            , svgMessagePipe 0 "A" "Z" [ testMessageDesc, testMessageDesc ]
-            ]
-        , svg
             [ class "elmmessagepipes"
             , width "500" --is actually 500px
             , height "500"
@@ -307,11 +304,10 @@ svgMessagePipe angle myname yourname messageDescriptors =
         , fill "white"
         , stroke "black"
         , strokeWidth "3"
-
-           , transform <|
-                   "rotate( "
-                   ++ String.fromInt angle
-                   ++ " 0 0)"
+        , transform <|
+            "rotate( "
+                ++ String.fromInt angle
+                ++ " 0 0)"
         ]
         (List.concat
             [ [ svgPipe messageDescriptors
@@ -379,15 +375,14 @@ svgPipe messages =
         , y "30%"
         ]
         (List.concat
-            [
-                 [ rect
+            [ [ rect
                     [ class "svgPipe"
                     , width "100%"
                     , height "100%"
                     ]
                     []
               ]
-             ,messageOrbs messages
+            , messageOrbs messages
             ]
         )
 
@@ -443,20 +438,24 @@ svgDestination name =
         , strokeWidth "3"
         , x "80%"
         , y "0"
+        , Svg.Events.onClick <| Hello "svg clcked"
+        , Svg.Events.onMouseOver <| Hello "svg OVER"
+        , Svg.Events.onMouseOut <| Hello "svg OUT"
         ]
-        [ rect [ x "0", y "0", width "100%", height "100%", rx "1", ry "1" ] []
+        [ boundingRectangle
+        , rect
+            [ width "100%"
+            , height "100%"
+            ]
+            []
         , circle
             [ cx "50%"
             , cy "50%"
-            , Svg.Events.onClick <| Hello "svg clcked"
-            , Svg.Events.onMouseOver <| Hello "svg OVER"
-            , Svg.Events.onMouseOut <| Hello "svg OUT"
             , r "30%"
             , fill "brown"
             ]
             []
         , text_ [ x "40%", y "60%", fontSize "1em" ] [ text name ]
-        , boundingRectangle
         ]
 
 
