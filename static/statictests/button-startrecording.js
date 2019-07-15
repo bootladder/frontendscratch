@@ -1,15 +1,13 @@
-//recorder is a global
-//btnStopRecording is a global
-
 var btnStartRecording = document.getElementById('btn-start-recording');
+var audioRecording = document.getElementById('audio-recording');
 
 btnStartRecording.onclick = function() {
     this.disabled = true;
     captureMicrophone(function(microphone) {
 				console.log("getUserMedia OK, callback();");
-        setSrcObject(microphone, audio);
+        setSrcObject(microphone, audioRecording);
         //audio.play(); //has no effect?
-        audio.muted = true; 
+        audioRecording.muted = true;
 
         recorder = RecordRTC(microphone, {
             type: 'audio',

@@ -1,4 +1,4 @@
-port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), archiveButton, boundingRectangle, deleteButton, filterMessagesFromUser, httpDeleteMessage, httpFetchMessages, init, main, messageDescriptorResponseModelDecoder, messageOrbs, metadataButton, pixelRulerLength, playbackMessage, queryDecoder, replyButton, responseModel2ViewModel, selectedIndex, subscriptions, svgCenterOrb, svgDestination, svgMessagePipe, svgOrb, svgPipe, svgSender, text, update, updateJsonBody, updateMessageDescriptorListenedToState, view, viewMessageMetadata)
+port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorViewModel, Model, Msg(..), UserInputForm(..), archiveButton, boundingRectangle, deleteButton, filterMessagesFromUser, httpDeleteMessage, httpFetchMessages, init, main, messageDescriptorResponseModelDecoder, messageOrbs, metadataButton, pixelRuler, pixelRulerLength, playbackMessage, queryDecoder, replyButton, responseModel2ViewModel, selectedIndex, subscriptions, svgCenterOrb, svgDestination, svgMessagePipe, svgOrb, svgPipe, svgSender, testMessageDesc, text, update, updateJsonBody, updateMessageDescriptorListenedToState, view, viewPlaybackForm, viewUserInputForm)
 
 import Basics.Extra exposing (..)
 import Browser
@@ -28,6 +28,7 @@ type alias Model =
     , messageDescriptors : List MessageDescriptorViewModel
     , selectedMessage : Maybe MessageDescriptorViewModel
     , user : String
+    , form : UserInputForm
     }
 
 
@@ -55,9 +56,15 @@ type alias MessageDescriptorViewModel =
     }
 
 
+type UserInputForm
+    = InitialInputForm
+    | PlaybackForm MessageDescriptorViewModel
+    | RecordForm String
+
+
 init : Int -> ( Model, Cmd Msg )
 init a =
-    ( Model "uninint" [] Nothing "steve", httpFetchMessages "steve" )
+    ( Model "uninint" [] Nothing "steve" InitialInputForm, httpFetchMessages "steve" )
 
 
 
@@ -140,7 +147,7 @@ updateMessageDescriptorListenedToState id =
 
 
 
--- UPDATE
+--UPDATE
 
 
 type Msg
@@ -204,7 +211,10 @@ update msg model =
             ( { model | hello = "blah" }, Cmd.none )
 
         OrbClicked messageDesc ->
-            ( { model | selectedMessage = Just messageDesc }
+            ( { model
+                | selectedMessage = Just messageDesc
+                , form = PlaybackForm messageDesc
+              }
             , Cmd.batch
                 [ playbackMessage messageDesc.id
                 , updateMessageDescriptorListenedToState messageDesc.id
@@ -212,7 +222,11 @@ update msg model =
             )
 
         UserSelectButtonClicked user ->
-            ( { model | user = user }, httpFetchMessages user )
+            ( { model
+                | user = user
+              }
+            , httpFetchMessages user
+            )
 
         ReplyButtonClicked messageDesc ->
             ( { model | hello = "reply clicked" ++ messageDesc.sender }, Cmd.none )
@@ -224,7 +238,9 @@ update msg model =
             ( { model | hello = "archive clicked" }, Cmd.none )
 
         YouButtonClicked username ->
-            ( model, Cmd.none )
+            ( { model | form = RecordForm username }
+            , Cmd.none
+            )
 
 
 responseModel2ViewModel : MessageDescriptorResponseModel -> MessageDescriptorViewModel
@@ -286,12 +302,20 @@ view model =
             , height "500"
             ]
             [ boundingRectangle
+
+            -- Message Pipes
             , svgMessagePipe 0 model.user "aaron" <| filterMessagesFromUser "aaron" model.messageDescriptors
             , svgMessagePipe 25 model.user "user1" <| filterMessagesFromUser "user1" model.messageDescriptors
             , svgMessagePipe 50 model.user "user2" <| filterMessagesFromUser "user2" model.messageDescriptors
             , svgMessagePipe 75 model.user "steve" <| filterMessagesFromUser "steve" model.messageDescriptors
+
+            -- Center
             , svgCenterOrb model.user
-            , viewMessageMetadata model.selectedMessage
+
+            -- User Input Form
+            , viewUserInputForm model.form
+
+            --, viewMessageMetadata model.selectedMessage
             ]
         ]
 
@@ -438,7 +462,7 @@ svgDestination name =
         , strokeWidth "3"
         , x "80%"
         , y "0"
-        , Svg.Events.onClick <| Hello "svg clcked"
+        , Svg.Events.onClick <| YouButtonClicked name
         , Svg.Events.onMouseOver <| Hello "svg OVER"
         , Svg.Events.onMouseOut <| Hello "svg OUT"
         ]
@@ -459,52 +483,69 @@ svgDestination name =
         ]
 
 
-viewMessageMetadata : Maybe MessageDescriptorViewModel -> Html Msg
-viewMessageMetadata maybemessage =
-    case maybemessage of
-        Just message ->
-            svg []
-                [ svg
-                    [ x "0"
-                    , y "75%"
-                    , height "25%"
-                    ]
-                    [ boundingRectangle
-                    , svg
-                        [ x "0%"
-                        , y "0%"
-                        , width "30%"
-                        ]
-                        [ replyButton message ]
-                    , svg
-                        [ x "33%"
-                        , y "0%"
-                        , width "30%"
-                        ]
-                        [ deleteButton message ]
-                    , svg
-                        [ x "66%"
-                        , y "0%"
-                        , width "30%"
-                        ]
-                        [ archiveButton message ]
-                    , text_
-                        [ x "0"
-                        , y "75%"
-                        , fontSize "2em"
-                        ]
-                        [ text "HURR" ]
-                    ]
-                ]
 
-        Nothing ->
-            svg
+-- USER INPUT FORM
+
+
+viewUserInputForm : UserInputForm -> Html Msg
+viewUserInputForm form =
+    case form of
+        InitialInputForm ->
+            svg [] []
+
+        PlaybackForm message ->
+            viewPlaybackForm message
+
+        RecordForm yourname ->
+            viewRecordForm yourname
+
+
+viewRecordForm yourname =
+    svg
+        [ x "0"
+        , y "75%"
+        , height "25%"
+        ]
+        [ circle [ r "50%" ] []
+        , foreignObject [ Html.Attributes.style "backgroundColor" "red" ] [ text "TATAA" ]
+        ]
+
+
+viewPlaybackForm : MessageDescriptorViewModel -> Html Msg
+viewPlaybackForm message =
+    svg []
+        [ svg
+            [ x "0"
+            , y "75%"
+            , height "25%"
+            ]
+            [ boundingRectangle
+            , svg
+                [ x "0%"
+                , y "0%"
+                , width "30%"
+                ]
+                [ replyButton message ]
+            , svg
+                [ x "33%"
+                , y "0%"
+                , width "30%"
+                ]
+                [ deleteButton message ]
+            , svg
+                [ x "66%"
+                , y "0%"
+                , width "30%"
+                ]
+                [ archiveButton message ]
+            , text_
                 [ x "0"
                 , y "75%"
-                , height "25%"
+                , fontSize "2em"
                 ]
-                [ boundingRectangle
-                ]
+                [ text "HURR" ]
+            ]
+        ]
 
 
 replyButton message =
