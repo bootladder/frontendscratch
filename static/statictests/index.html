@@ -1,177 +1,182 @@
-<style>
- .metadatabutton:hover {
-     background-color: black;
- }
-
-
-</style>
-<div class="elm-thing" >
-    <p>Using Elm, Ports, SVG to create interactive widgets.</p>
-    <p>
-        <div id="elm-place">    </div>
-        <script src="/elm/elmapp.js"></script>
-        <script>
-         var app = Elm.Main.init({
-             node: document.getElementById('elm-place'),
-             flags: 77
-         });
-
-         app.ports.playbackMessage.subscribe(id => {
-             elm_playbackMessage(id); //audiomessage_1561945366910
-         });
-
-
-         var audioserverurl = "http://localhost:9002"
-
-         function elm_playbackMessage(id) {
-             console.log("elmplaybackmessage" + id)
-             var audio = document.getElementById('audio-playback') || new Audio();
-             audio.src= audioserverurl+"/audiomessagedownload/" + id;
-             audio.load()
-
-             window.location.href='#divAudioPlayback'
+<html>
+    <head>
+        <style>
+         .metadatabutton:hover {
+             background-color: black;
          }
+        </style>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="app.js"></script>
+    </head>
 
-         function elm_send_port(obj){
+    <body>
+        <div class="elm-thing" >
+            <p>Using Elm, Ports, SVG to create interactive widgets.</p>
+            <p>
+                <div id="elm-place">    </div>
+                <script src="/elm/elmapp.js"></script>
+                <script>
+                 var app = Elm.Main.init({
+                     node: document.getElementById('elm-place'),
+                     flags: 77
+                 });
 
-             obj = {
-                 hello: " yeaerr hello!"
-             }
-             app.ports.selectedIndex.send(obj)
-         }
-        </script>
-    </p>
-</div>
+                 app.ports.playbackMessage.subscribe(id => {
+                     elm_playbackMessage(id); //audiomessage_1561945366910
+                 });
 
-<div class="">
-  <hr>
-  <h3>Recording</h3>
 
-  <div class="row">
-    <div class="col-sm-4">
-      <audio id="audio-recording" controls autoplay></audio>
-    </div>
-    <div class="col-sm-4">
-      <button id="btn-start-recording">Start Recording</button>
-      <button id="btn-stop-recording" disabled>Stop Recording</button>
-    </div>
-  </div>
-</div>
+                 var audioserverurl = "http://localhost:9002";
 
-<div class="">
-    <hr>
-    <h3>Playback</h3>
+                 function elm_playbackMessage(id) {
+                     console.log("elmplaybackmessage" + id)
+                     var audio = document.getElementById('audio-playback') || new Audio();
+                     audio.src= audioserverurl+"/audiomessagedownload/" + id;
+                     audio.load()
 
-    <div class="row">
-        <div class="col">
-            <audio id="audio-playback" controls autoplay></audio>
+                     window.location.href='#divAudioPlayback'
+                 };
+
+                 function elm_send_port(obj){
+
+                     obj = {
+                         hello: " yeaerr hello!"
+                     }
+                     app.ports.selectedIndex.send(obj)
+                 };
+                </script>
+            </p>
         </div>
-    </div>
-</div>
+
+        <div class="">
+            <hr>
+            <h3>Recording</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <audio id="audio-recording" controls autoplay></audio>
+                </div>
+                <div class="col-sm-4">
+                    <button id="btn-start-recording">Start Recording</button>
+                    <button id="btn-stop-recording" disabled>Stop Recording</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <hr>
+            <h3>Playback</h3>
+
+            <div class="row">
+                <div class="col">
+                    <audio id="audio-playback" controls autoplay></audio>
+                </div>
+            </div>
+        </div>
 
 
-<div class="jumbotron">
-  <hr>
-  <h2>Audio Message Metadata Select</h2>
+        <div class="jumbotron">
+            <hr>
+            <h2>Audio Message Metadata Select</h2>
 
-  <div class="row">
-    <div class="col-sm-3">
-      <form id="form-message-metadata">
-        <h4>Sender</h4>
-        <input type="radio" name="sender" value="steve" checked> Steve<br>
-        <input type="radio" name="sender" value="aaron"> Aaron <br>
-        <input type="radio" name="sender" value="user1"> User 1 <br>
-        <input type="radio" name="sender" value="user2"> User 2
-      </form> 
-    </div>
-    <div class="col-sm-3">
-      <form id="form-message-metadata">
-        <h4>Destination</h4>
-        <input type="radio" name="destination" value="steve" checked> Steve <br>
-        <input type="radio" name="destination" value="aaron"> Aaron <br>
-        <input type="radio" name="destination" value="user1"> User 1<br>
-        <input type="radio" name="destination" value="user2"> User 2
-      </form> 
-    </div>
-    <div class="col-sm-3">
-      <form id="form-message-metadata">
-        <h4>Project</h4>
-        <input type="radio" name="project" value="1" checked> Hive Messages<br>
-        <input type="radio" name="project" value="2"> Hive Chat<br>
-        <input type="radio" name="project" value="3"> Project 3
-      </form> 
-    </div>
-    <div class="col-sm-3">
-      <form id="form-message-metadata">
+            <div class="row">
+                <div class="col-sm-3">
+                    <form id="form-message-metadata">
+                        <h4>Sender</h4>
+                        <input type="radio" name="sender" value="steve" checked> Steve<br>
+                        <input type="radio" name="sender" value="aaron"> Aaron <br>
+                        <input type="radio" name="sender" value="user1"> User 1 <br>
+                        <input type="radio" name="sender" value="user2"> User 2
+                    </form> 
+                </div>
+                <div class="col-sm-3">
+                    <form id="form-message-metadata">
+                        <h4>Destination</h4>
+                        <input type="radio" name="destination" value="steve" checked> Steve <br>
+                        <input type="radio" name="destination" value="aaron"> Aaron <br>
+                        <input type="radio" name="destination" value="user1"> User 1<br>
+                        <input type="radio" name="destination" value="user2"> User 2
+                    </form> 
+                </div>
+                <div class="col-sm-3">
+                    <form id="form-message-metadata">
+                        <h4>Project</h4>
+                        <input type="radio" name="project" value="1" checked> Hive Messages<br>
+                        <input type="radio" name="project" value="2"> Hive Chat<br>
+                        <input type="radio" name="project" value="3"> Project 3
+                    </form> 
+                </div>
+                <div class="col-sm-3">
+                    <form id="form-message-metadata">
+                        <div class="row">
+                            <h4>Topic</h4>
+                        </div>
+                        <div class="row">
+                            <input type="radio" name="topic" value="A" checked> A <br>
+                            <input type="radio" name="topic" value="B"> B <br>
+                            <input type="radio" name="topic" value="C"> C
+                        </div>
+                        <div class="row">
+                            <input id="textinput-customtopic" type="text" name="customtopic" value=""> 
+                        </div>
+                    </form> 
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-sm-4">
+                    <button id="btn-process-recording">Process (Upload) Recording</button>
+                </div> 
+            </div> 
+        </div>
+
         <div class="row">
-          <h4>Topic</h4>
+            <div class="col-sm-3">
+
+                <div class="jumbotron" id="j2">
+                    <div id="messagepipe2"></div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3">
+
+                <div class="jumbotron" id="j1">
+                    <div id="testmessagepipe"/></div>
+            </div>
+
         </div>
-        <div class="row">
-          <input type="radio" name="topic" value="A" checked> A <br>
-          <input type="radio" name="topic" value="B"> B <br>
-          <input type="radio" name="topic" value="C"> C
+
+        <div class="col-sm-3">
+
+            <div class="jumbotron" id="j1">
+                <div id="testpipe2"/></div>
         </div>
-        <div class="row">
-          <input id="textinput-customtopic" type="text" name="customtopic" value=""> 
+
         </div>
-      </form> 
-    </div>
-  </div> 
-  <div class="row">
-    <div class="col-sm-4">
-      <button id="btn-process-recording">Process (Upload) Recording</button>
-    </div> 
-  </div> 
-</div>
-
-<div class="row">
-  <div class="col-sm-3">
-
-    <div class="jumbotron" id="j2">
-      <div id="messagepipe2"></div>
-    </div>
-
-  </div>
-
-  <div class="col-sm-3">
-
-    <div class="jumbotron" id="j1">
-      <div id="testmessagepipe"/></div>
-    </div>
-
-  </div>
-
-  <div class="col-sm-3">
-
-    <div class="jumbotron" id="j1">
-      <div id="testpipe2"/></div>
-    </div>
-
-  </div>
-</div>
+        </div>
 
 
 
 
-<hr>
+        <hr>
 
 
-<div class="jumbotron">
-  <hr>
-  <h2>API TESTS</h2>
+        <div class="jumbotron">
+            <hr>
+            <h2>API TESTS</h2>
 
-  <div class="row">
-    <div class="col-sm-4">
-      <button id="btn-test-query">Query Recordings</button>
-    </div> 
-  </div> 
-</div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <button id="btn-test-query">Query Recordings</button>
+                </div> 
+            </div> 
+        </div>
 
 
 
-<div id="divTest1"></div>
-<hr>
+        <div id="divTest1"></div>
+        <hr>
 
-<zink rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="app.js"></script>
+        </body>
+</html>

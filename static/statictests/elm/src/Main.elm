@@ -2,8 +2,8 @@ port module Main exposing (MessageDescriptorResponseModel, MessageDescriptorView
 
 import Basics.Extra exposing (..)
 import Browser
-import Html exposing (Attribute, Html, button, div, input, text)
-import Html.Attributes
+import Html exposing (Attribute, Html, audio, button, div, form, input, text)
+import Html.Attributes exposing (autoplay, checked, controls)
 import Html.Events exposing (onClick, onInput)
 import Http
 import Json.Decode as Decode exposing (..)
@@ -311,11 +311,12 @@ view model =
 
             -- Center
             , svgCenterOrb model.user
+            ]
 
-            -- User Input Form
-            , viewUserInputForm model.form
-
-            --, viewMessageMetadata model.selectedMessage
+        -- User Input Form
+        , div
+            [ width "500" ]
+            [ viewUserInputForm model.form
             ]
         ]
 
@@ -501,50 +502,73 @@ viewUserInputForm form =
 
 
 viewRecordForm yourname =
-    svg
-        [ x "0"
-        , y "75%"
-        , height "25%"
-        ]
-        [ circle [ r "50%" ] []
-        , foreignObject [ Html.Attributes.style "backgroundColor" "red" ] [ text "TATAA" ]
+    div [ class "viewRecordForm", class "jumbotron" ]
+        [ div [ class "row" ]
+            [ Html.h3 [] [ Html.text <| "Send Message to " ++ yourname ] ]
+        , div
+            [ class "row" ]
+            [ div [ class "col-sm-3" ]
+                [ Html.h4 [] [ text "Project" ]
+                , input [ type_ "radio", name "project", Html.Attributes.value "1", checked True ] []
+                , text "Project 1"
+                , Html.br [] []
+                , input [ type_ "radio", name "project", Html.Attributes.value "2" ] []
+                , text "Project 2"
+                , Html.br [] []
+                , input [ type_ "radio", name "project", Html.Attributes.value "3" ] []
+                , text "Project 3"
+                , Html.br [] []
+                ]
+            , div [ class "col-sm-3" ]
+                [ Html.h4 [] [ text "Topic" ]
+                , input [ type_ "radio", name "topic", Html.Attributes.value "A", checked True ] []
+                , text "Topic A"
+                , Html.br [] []
+                , input [ type_ "radio", name "topic", Html.Attributes.value "B" ] []
+                , text "Topic B"
+                , Html.br [] []
+                , input [ type_ "radio", name "topic", Html.Attributes.value "C" ] []
+                , text "Topic C"
+                , Html.br [] []
+                ]
+            , div [ class "col-sm-3" ]
+                [ button [ id "btn-start-recording" ] [ text "Start Recording" ]
+                , button [ id "btn-stop-recording" ] [ text "Stop Recording" ]
+                , audio [ id "audio-123", controls True, autoplay True ] []
+                ]
+            ]
         ]
 
 
 viewPlaybackForm : MessageDescriptorViewModel -> Html Msg
 viewPlaybackForm message =
-    svg []
-        [ svg
+    svg
+        [ width "100%" ]
+        [ boundingRectangle
+        , svg
+            [ x "0%"
+            , y "0%"
+            , width "30%"
+            ]
+            [ replyButton message ]
+        , svg
+            [ x "33%"
+            , y "0%"
+            , width "30%"
+            ]
+            [ deleteButton message ]
+        , svg
+            [ x "66%"
+            , y "0%"
+            , width "30%"
+            ]
+            [ archiveButton message ]
+        , text_
             [ x "0"
             , y "75%"
-            , height "25%"
+            , fontSize "2em"
             ]
-            [ boundingRectangle
-            , svg
-                [ x "0%"
-                , y "0%"
-                , width "30%"
-                ]
-                [ replyButton message ]
-            , svg
-                [ x "33%"
-                , y "0%"
-                , width "30%"
-                ]
-                [ deleteButton message ]
-            , svg
-                [ x "66%"
-                , y "0%"
-                , width "30%"
-                ]
-                [ archiveButton message ]
-            , text_
-                [ x "0"
-                , y "75%"
-                , fontSize "2em"
-                ]
-                [ text "HURR" ]
-            ]
+            [ text "HURR" ]
         ]
 
 
