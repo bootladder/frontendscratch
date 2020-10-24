@@ -163,6 +163,7 @@ type Msg
     | DeleteButtonClicked MessageDescriptorViewModel
     | ReceivedDeleteResponse (Result Http.Error ())
     | YouButtonClicked String -- User
+    | RecordFormTopicChecked String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -521,7 +522,7 @@ viewRecordForm yourname =
                 ]
             , div [ class "col-sm-3" ]
                 [ Html.h4 [] [ text "Topic" ]
-                , input [ type_ "radio", name "topic", Html.Attributes.value "A", checked True ] []
+                , input [ type_ "radio", name "topic", Html.Attributes.value "A", checked True, onClick <| RecordFormTopicChecked "A" ] []
                 , text "Topic A"
                 , Html.br [] []
                 , input [ type_ "radio", name "topic", Html.Attributes.value "B" ] []
